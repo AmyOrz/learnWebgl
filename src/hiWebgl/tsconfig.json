@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "../dist/fck.js",
+    "sourceMap": true
+  },
+  "files": [
+    "wd.d.ts",
+    "Director.ts",
+    "Scene.ts",
+    "Triangle.ts",
+    "TriTest.ts"
+  ]
+}

@@ -1,0 +1,28 @@
+body{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0px;
+  margin: 0px;
+}
+#panoDesk{
+  position:absolute;
+  width: 90%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0px;
+  margin: 0px;
+  left:10%;
+}
+#panel{
+  width:10%;
+  height:100%;
+  position: absolute;
+  left:0px;
+  .cube{
+    width:60px;
+    height:60px;
+    background: red;
+    margin:0 auto;
+  }
+}

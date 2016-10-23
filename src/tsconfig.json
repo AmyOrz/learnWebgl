@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "system",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "outFile": "./dist/fck.js",
+    "sourceMap": true
+  },
+  "files": [
+    "typings/three/index.d.ts",
+    "typings/jquery/index.d.ts",
+    "typings/stats/index.d.ts",
+    "typings/dat-gui/index.d.ts",
+    "typings/three-transformcontrols/index.d.ts",
+    "typings/three-orbitcontrols/index.d.ts",
+    "typings/three-dragformcontrols/index.d.ts",
+    "ts/Game.ts",
+    "ts/Scene.ts"
+  ]
+}
