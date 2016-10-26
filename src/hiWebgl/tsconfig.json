@@ -8,9 +8,9 @@
     "sourceMap": true
   },
   "files": [
-    "Vector3.d.ts",
-    "Vector4.d.ts",
-    "Matrix4.d.ts",
+    "Vector3.ts",
+    "Vector4.ts",
+    "Matrix4.ts",
     "Director.ts",
     "TriTest.ts"
   ]

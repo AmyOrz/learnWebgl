@@ -33,6 +33,7 @@ namespace Amy {
                 return;
             }
             this._gl.program = program;
+            this._gl.useProgram(program);
             return true;
         }
 

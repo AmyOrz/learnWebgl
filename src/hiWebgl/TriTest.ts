@@ -7,20 +7,22 @@ namespace Amy {
         '}\n';
     let FSHADER_SOURCE:string =
         'void main() {\n' +
-        '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+        '  gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);\n' +
         '}\n';
 
     let director = new Director(document.getElementById("webgl"));
     let gl:any = director.initWebgl();
     if(!director.initShader(VSHADER_SOURCE,FSHADER_SOURCE))alert("the shader err");
     let n:number = initVertexBuffer();
-    let modelMatrix:any = new Matrix4;
-    var Angle = 60.0;
-    var tx = 0.5;
+    let modelMatrix = new Matrix4();
+    let Angle:number = 30.0;
+    let tx:number = 0.5;
     modelMatrix.setRotate(Angle,0,0,1);
     modelMatrix.translate(tx,0,0);
     let u_ModelMatrix = gl.getUniformLocation(gl.program,"u_ModelMatrix");
-    gl.uniform4fv(u_ModelMatrix,false,modelMatrix.elements);
+    if(!u_ModelMatrix)
+        console.log("model matrix err");
+    gl.uniformMatrix4fv(u_ModelMatrix,false,modelMatrix.elements);
     gl.clearColor(0,0,0,1);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,n);
@@ -30,6 +32,10 @@ namespace Amy {
             0, 0.3,   -0.3, -0.3,   0.3, -0.3
         ]);
         let vertexBuffer:any = gl.createBuffer();
+        if(!vertexBuffer){
+            console.log("buffer err");
+            return -1;
+        }
         gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
         gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
         let a_Position = gl.getAttribLocation(gl.program,"a_Position");
