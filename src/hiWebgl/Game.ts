@@ -1,6 +1,4 @@
-/// <reference path="./wd.d.ts" />
 namespace Amy {
-    import Matrix4 = wd.Matrix4;
     export class Game{
         constructor(private _canvas:any) {}
         private _gl:any;

@@ -4,14 +4,14 @@
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
-    "outFile": "../dist/fck.js",
+    "outFile": "../dist/hiWebGl.js",
     "sourceMap": true
   },
   "files": [
-    "wd.d.ts",
+    "Vector3.d.ts",
+    "Vector4.d.ts",
+    "Matrix4.d.ts",
     "Director.ts",
-    "Scene.ts",
-    "Triangle.ts",
     "TriTest.ts"
   ]
 }
