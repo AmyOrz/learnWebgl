@@ -36,11 +36,6 @@ namespace Amy {
             this._gl.useProgram(program);
             return true;
         }
-
-        private _enable(type: number): void {
-            this._gl.enable(type);
-        }
-
         private _setColor(R: number, G: number, B: number, A: number): void {
             this._gl.clearColor(R, G, B, A);
         }

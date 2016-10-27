@@ -116,7 +116,7 @@ function initTextures(gl, n) {
     console.log('Failed to get the storage location of u_Sampler');
     return false;
   }
-
+  console.log({}.toString.call(u_Sampler0));
   // Create the image object
   var image0 = new Image();
   var image1 = new Image();
