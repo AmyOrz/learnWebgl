@@ -1,5 +1,3 @@
-// PerspectiveView_mvpMatrix.js (c) 2012 matsuda
-// Vertex shader program
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
   'attribute vec4 a_Color;\n' +

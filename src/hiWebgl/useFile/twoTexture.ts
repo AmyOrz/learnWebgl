@@ -2,6 +2,7 @@ namespace Amy {
     let VSHADER_SOURCE:string =
         "attribute vec4 a_Position;" +
         "attribute vec2 a_TexCoord;" +
+        "uniform mat4 u_mvpMatrix;" +
         "varying vec2 v_TexCoord;" +
         "void main(){" +
         "gl_Position = a_Position;" +
@@ -19,8 +20,8 @@ namespace Amy {
         "vec4 color1 = texture2D(u_Sampler1,v_TexCoord);" +
         "gl_FragColor = color0 * color1;" +
         "}";
-    let director = new Director(document.getElementById("webgl"));
-    let gl:any = director.initWebgl();
+    let director = new Director();
+    let gl:any = director.getWebglContext(document.getElementById("webgl"));
     if(!director.initShader(VSHADER_SOURCE,FSHADER_SOURCE))alert("the shader err");
     let n:number = initVertexBuffer();
     if(n < 0)console.log("initVertex error;");
@@ -34,6 +35,7 @@ namespace Amy {
 
         let u_Sampler0 = gl.getUniformLocation(gl.program,"u_Sampler0");
         let u_Sampler1 = gl.getUniformLocation(gl.program,"u_Sampler1");
+        let mvpMatrix = gl.getUniformLocation(gl.program,"u_mvpMatrix");
         if(!u_Sampler0 || !u_Sampler1)console.log("sampler create err");
 
         let img0 = new Image();

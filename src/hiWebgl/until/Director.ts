@@ -1,14 +1,11 @@
 namespace Amy {
     export class Director {
-        constructor(private _canvas: any) {
-        }
-
         private _gl: any;
 
-        public initWebgl(): any {
-            this._getWebgl();
-            this._gl.viewportWidth = this._canvas.width;
-            this._gl.viewportHeight = this._canvas.height;
+        public getWebglContext(_canvas:any): any {
+            this._getWebgl(_canvas);
+            this._gl.viewportWidth = _canvas.width;
+            this._gl.viewportHeight = _canvas.height;
             return this._gl;
         }
 
@@ -40,11 +37,11 @@ namespace Amy {
             this._gl.clearColor(R, G, B, A);
         }
 
-        private _getWebgl(): any {
+        private _getWebgl(_canvas:any): any {
             let names: string[] = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
             for (let item of names) {
                 try {
-                    this._gl = this._canvas.getContext(item);
+                    this._gl = _canvas.getContext(item);
                 } catch (e) {
                 }
                 if (this._gl) {

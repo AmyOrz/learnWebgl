@@ -117,81 +117,9 @@ var Amy;
     };
     tick();
 })(Amy || (Amy = {}));
-var TreeNode = (function () {
-    function TreeNode(data, left, right) {
-        this.data = data;
-        this.left = left;
-        this.right = right;
-    }
-    return TreeNode;
-}());
-var Tree = (function () {
-    function Tree() {
-    }
-    Tree.prototype.show = function () {
-        console.log(this.root);
+var a = (function () {
+    return function () {
+        return 1;
     };
-    Tree.prototype.insert = function (data) {
-        var n = new TreeNode(data, null, null);
-        if (this.root == null) {
-            this.root = n;
-        }
-        else {
-            var current = this.root;
-            var parent_1;
-            while (current) {
-                parent_1 = current;
-                if (data < current.data) {
-                    current = current.left;
-                    if (current == void 0) {
-                        parent_1.left = n;
-                        break;
-                    }
-                }
-                else {
-                    current = current.right;
-                    if (current == void 0) {
-                        parent_1.right = n;
-                        break;
-                    }
-                }
-            }
-        }
-    };
-    Tree.prototype.preOrder = function (root) {
-        if (root != void 0) {
-            console.log(root.data);
-            arguments.callee(root.left);
-            arguments.callee(root.right);
-        }
-    };
-    Tree.prototype.inOrder = function (root) {
-        if (root != void 0) {
-            arguments.callee(root.left);
-            console.log(root.data);
-            arguments.callee(root.right);
-        }
-    };
-    Tree.prototype.lastOrder = function (root) {
-        if (root != void 0) {
-            arguments.callee(root.left);
-            arguments.callee(root.right);
-            console.log(root.data);
-        }
-    };
-    Tree.prototype.DepthFirstSearch = function () {
-    };
-    return Tree;
-}());
-var tree = new Tree();
-tree.insert(25);
-tree.insert(45);
-tree.insert(16);
-tree.insert(17);
-tree.insert(3);
-tree.insert(12);
-tree.insert(22);
-tree.insert(18);
-tree.insert(23);
-tree.lastOrder(tree.root);
+})();
 //# sourceMappingURL=fck.js.map
