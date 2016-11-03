@@ -12,6 +12,6 @@
     "until/Vector4.ts",
     "until/Matrix4.ts",
     "until/Director.ts",
-    "useFile/perspectiveView.ts"
+    "useFile/lightCube.ts"
   ]
 }

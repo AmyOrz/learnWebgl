@@ -9,10 +9,10 @@ namespace Amy {
             return this._gl;
         }
 
-        public initShader(vs: string, fs: string): boolean {
-            let program = this._gl.createProgram();
-            let vshader: any = this._loadShader(this._gl.VERTEX_SHADER, vs);
-            let fshader: any = this._loadShader(this._gl.FRAGMENT_SHADER, fs);
+        public initShader(vs: string, fs: string): WebGLProgram {
+            let program:WebGLProgram = this._gl.createProgram();
+            let vshader:WebGLShader = this._loadShader(this._gl.VERTEX_SHADER, vs);
+            let fshader:WebGLShader = this._loadShader(this._gl.FRAGMENT_SHADER, fs);
             if (!vshader || !fshader) {
                 return;
             }
@@ -29,9 +29,7 @@ namespace Amy {
                 this._gl.deleteShader(vshader);
                 return;
             }
-            this._gl.program = program;
-            this._gl.useProgram(program);
-            return true;
+            return program;
         }
         private _setColor(R: number, G: number, B: number, A: number): void {
             this._gl.clearColor(R, G, B, A);
@@ -50,7 +48,7 @@ namespace Amy {
             }
         }
 
-        private _loadShader(type: number, value: string): any {
+        private _loadShader(type: number, value: string): WebGLShader {
             let shader: WebGLShader = this._gl.createShader(type);
             if (shader == null) {
                 console.log("unable to create shader");

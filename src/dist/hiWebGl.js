@@ -617,9 +617,7 @@ var Amy;
                 this._gl.deleteShader(vshader);
                 return;
             }
-            this._gl.program = program;
-            this._gl.useProgram(program);
-            return true;
+            return program;
         };
         Director.prototype._setColor = function (R, G, B, A) {
             this._gl.clearColor(R, G, B, A);
@@ -662,70 +660,132 @@ var Amy;
 var Amy;
 (function (Amy) {
     var VSHADER = "attribute vec4 a_Position;" +
-        "attribute vec4 a_color;" +
-        "uniform mat4 u_mvpMatrix;" +
-        "varying vec4 v_color;" +
+        "attribute vec4 a_Color;" +
+        "attribute vec4 a_Normal;" +
+        "uniform mat4 u_MvpMatrix;" +
+        "uniform mat4 u_NormalMatrix;" +
+        "uniform vec3 u_LightDirection;" +
+        "varying vec4 v_Color;" +
         "void main(){" +
-        "gl_Position = u_mvpMatrix * a_Position;" +
-        "v_color = a_color;" +
+        "gl_Position = u_MvpMatrix * a_Position;" +
+        "vec4 normal = u_NormalMatrix * a_Normal;" +
+        "float nDot = max(dot(u_LightDirection,normalize(normal.xyz)),0.0);" +
+        "v_Color = vec4(a_Color.xyz * nDot,a_Color.a);" +
         "}";
     var FSHADER = "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n" +
-        "varying vec4 v_color;" +
+        "varying vec4 v_Color;" +
         "void main(){" +
-        "gl_FragColor = v_color;" +
+        "gl_FragColor = v_Color;" +
         "}";
-    var director = new Amy.Director();
     var canvas = document.getElementById("webgl");
+    var director = new Amy.Director();
     var gl = director.getWebglContext(canvas);
-    if (!director.initShader(VSHADER, FSHADER))
+    var program = director.initShader(VSHADER, FSHADER);
+    if (!program)
         alert("shader err");
-    gl.clearColor(0, 0, 0, 1);
-    var n = initVertices();
-    initMatrix();
-    function initVertices() {
-        var verticesColors = new Float32Array([
-            0.0, 1.0, -4.0, 0.4, 1.0, 0.4,
-            -0.5, -1.0, -4.0, 0.4, 1.0, 0.4,
-            0.5, -1.0, -4.0, 1.0, 0.4, 0.4,
-            0.0, 1.0, -2.0, 1.0, 1.0, 0.4,
-            -0.5, -1.0, -2.0, 1.0, 1.0, 0.4,
-            0.5, -1.0, -2.0, 1.0, 0.4, 0.4,
-            0.0, 1.0, 0.0, 0.4, 0.4, 1.0,
-            -0.5, -1.0, 0.0, 0.4, 0.4, 1.0,
-            0.5, -1.0, 0.0, 1.0, 0.4, 0.4,
-        ]);
-        var vertexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
-        var fsize = verticesColors.BYTES_PER_ELEMENT;
-        var a_Position = gl.getAttribLocation(gl.program, "a_Position");
-        gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, fsize * 6, 0);
-        gl.enableVertexAttribArray(a_Position);
-        var a_color = gl.getAttribLocation(gl.program, "a_color");
-        gl.vertexAttribPointer(a_color, 3, gl.FLOAT, false, fsize * 6, fsize * 3);
-        gl.enableVertexAttribArray(a_color);
-        return 9;
+    var n = _initVertices();
+    if (n < 0)
+        alert("vertices err");
+    _initWebglSetting();
+    var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
+    var u_NormalMatrix = gl.getUniformLocation(program, "u_NormalMatrix");
+    var u_LightDirection = gl.getUniformLocation(program, "u_LightDirection");
+    var vpMatrix = new Amy.Matrix4();
+    vpMatrix.setPerspective(45, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
+    vpMatrix.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
+    var LightDirection = new Amy.Vector3([0.5, 3.0, 4.0]);
+    LightDirection.normalize();
+    gl.uniform3fv(u_LightDirection, LightDirection.elements);
+    var currentAngle = 0.0;
+    var modelMatrix = new Amy.Matrix4();
+    var mvpMatrix = new Amy.Matrix4();
+    var normalMatrix = new Amy.Matrix4();
+    gl.useProgram(program);
+    var tick = function () {
+        currentAngle = _animate(currentAngle);
+        modelMatrix.setRotate(currentAngle, 0, 1, 0);
+        mvpMatrix.set(vpMatrix).multiply(modelMatrix);
+        gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+        normalMatrix.setInverseOf(modelMatrix);
+        normalMatrix.transpose();
+        gl.uniformMatrix4fv(u_NormalMatrix, false, normalMatrix.elements);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+        requestAnimationFrame(tick);
+    };
+    tick();
+    var lastTime = Date.now();
+    function _animate(currentAngle) {
+        var nowTime = Date.now();
+        var elapsed = (nowTime - lastTime) || 0;
+        lastTime = nowTime;
+        var newAngle = currentAngle + (30 * elapsed) / 1000.0;
+        return newAngle %= 360;
     }
-    ;
-    function initMatrix() {
-        var u_mvpMatrix = gl.getUniformLocation(gl.program, "u_mvpMatrix");
-        var modelMatrix = new Amy.Matrix4();
-        var viewMatrix = new Amy.Matrix4();
-        var projMatrix = new Amy.Matrix4();
-        var mvpMatrix = new Amy.Matrix4();
-        modelMatrix.setTranslate(-0.75, 0, 0);
-        viewMatrix.setLookAt(0, 0, 5, 0, 0, -100, 0, 1, 0);
-        projMatrix.setPerspective(30, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
-        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
-        gl.uniformMatrix4fv(u_mvpMatrix, false, mvpMatrix.elements);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-        gl.drawArrays(gl.TRIANGLES, 0, n);
-        modelMatrix.setTranslate(0.75, 0, 0);
-        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
-        gl.uniformMatrix4fv(u_mvpMatrix, false, mvpMatrix.elements);
-        gl.drawArrays(gl.TRIANGLES, 0, n);
+    function _initWebglSetting() {
+        gl.useProgram(program);
+        gl.clearColor(0, 0, 0, 1);
+        gl.enable(gl.DEPTH_TEST);
+    }
+    function _initVertices() {
+        var vertices = new Float32Array([
+            1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0,
+            -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0,
+            -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
+            1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0
+        ]);
+        var colors = new Float32Array([
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0
+        ]);
+        var normals = new Float32Array([
+            0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,
+            1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+            0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0,
+            -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,
+            0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
+            0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0
+        ]);
+        var indices = new Uint8Array([
+            0, 1, 2, 0, 2, 3,
+            4, 5, 6, 4, 6, 7,
+            8, 9, 10, 8, 10, 11,
+            12, 13, 14, 12, 14, 15,
+            16, 17, 18, 16, 18, 19,
+            20, 21, 22, 20, 22, 23
+        ]);
+        if (!_initArrayBuffer("a_Position", vertices, 3, gl.FLOAT))
+            alert("init arr err");
+        if (!_initArrayBuffer("a_Normal", normals, 3, gl.FLOAT))
+            alert("init arr err");
+        if (!_initArrayBuffer("a_Color", colors, 3, gl.FLOAT))
+            alert("init arr err");
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        var indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+        return indices.length;
+    }
+    function _initArrayBuffer(attribute, vertices, pointNum, pointType) {
+        var buffer = gl.createBuffer();
+        if (!buffer)
+            alert("buffer err");
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+        var a_Attribute = gl.getAttribLocation(program, attribute);
+        if (a_Attribute < 0)
+            alert("attribute err");
+        gl.vertexAttribPointer(a_Attribute, pointNum, pointType, false, 0, 0);
+        gl.enableVertexAttribArray(a_Attribute);
+        return true;
     }
 })(Amy || (Amy = {}));
 //# sourceMappingURL=hiWebGl.js.map
