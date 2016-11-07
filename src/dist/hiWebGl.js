@@ -688,7 +688,6 @@ var Amy;
     var n = _initVertices();
     if (n < 0)
         alert("vertices err");
-    _initWebglSetting();
     var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
     var u_NormalMatrix = gl.getUniformLocation(program, "u_NormalMatrix");
     var u_LightDirection = gl.getUniformLocation(program, "u_LightDirection");
@@ -702,7 +701,7 @@ var Amy;
     var modelMatrix = new Amy.Matrix4();
     var mvpMatrix = new Amy.Matrix4();
     var normalMatrix = new Amy.Matrix4();
-    gl.useProgram(program);
+    _initWebglSetting();
     var tick = function () {
         currentAngle = _animate(currentAngle);
         modelMatrix.setRotate(currentAngle, 0, 1, 0);
