@@ -74,7 +74,7 @@ function main() {
   gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
 
   // Draw
- raw(gl, n, u_ViewMatrix, viewMatrix);
+ draw(gl, n, u_ViewMatrix, viewMatrix);
 } 
 
 function initVertexBuffers(gl) {

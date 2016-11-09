@@ -83,7 +83,7 @@ function main() {
 
   var viewProjMatrixFBO = new Matrix4();   // Prepare view projection matrix for FBO
   viewProjMatrixFBO.setPerspective(30.0, OFFSCREEN_WIDTH/OFFSCREEN_HEIGHT, 1.0, 100.0);
-  viewProjMatrixFBO.lookAt(0.0, 2.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  viewProjMatrixFBO.lookAt(0.0, 1.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
   // Start drawing
   var currentAngle = 0.0; // Current rotation angle (degrees)
@@ -255,7 +255,7 @@ function initTextures(gl) {
   };
 
   // Tell the browser to load an Image  
-  image.src = '../resources/sky_cloud.jpg';
+  image.src = '../resources/sky.jpg';
 
   return texture;
 }
@@ -338,7 +338,7 @@ function draw(gl, canvas, fbo, plane, cube, angle, texture, viewProjMatrix, view
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT); // Clear the color buffer
 
-  drawTexturedPlane(gl, gl.program, plane, angle, fbo.texture, viewProjMatrix);  // Draw the plane
+  drawTexturedPlane(gl, gl.program, plane, 0, fbo.texture, viewProjMatrix);  // Draw the plane
 }
 
 // Coordinate transformation matrix

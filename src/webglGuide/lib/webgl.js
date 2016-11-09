@@ -552,8 +552,8 @@ var WebGLUtils = (function () {
     };
     return WebGLUtils;
 })();
-///<reference path = "webgl-utils.ts"/>
-///<reference path = "webgl-debug.ts"/>
+///<reference path = "webgl-utils.threejs"/>
+///<reference path = "webgl-debug.threejs"/>
 function initShaders(gl, vshader, fshader) {
     var program = createProgram(gl, vshader, fshader);
     if (!program) {

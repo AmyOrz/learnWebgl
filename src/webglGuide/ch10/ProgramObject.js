@@ -112,7 +112,10 @@ function main() {
 
   // Set the clear color and enable the depth test
   gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.CULL_FACE);
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.cullFace(gl.BACK);
+  gl.frontFace(gl.CCW);
 
   // Calculate the view projection matrix
   var viewProjMatrix = new Matrix4();

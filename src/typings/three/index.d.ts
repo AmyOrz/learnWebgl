@@ -2664,7 +2664,7 @@ declare namespace THREE {
     }
 
     // MultiMaterial does not inherit the Material class in the original code. However, it should treat as Material class.
-    // See tests/canvas/canvas_materials.ts.
+    // See tests/canvas/canvas_materials.threejs.
     export class MultiMaterial extends Material {
         constructor(materials?: Material[]);
 

@@ -15,7 +15,7 @@
     "typings/three-transformcontrols/index.d.ts",
     "typings/three-orbitcontrols/index.d.ts",
     "typings/three-dragformcontrols/index.d.ts",
-    "ts/Game.ts",
-    "ts/Scene.ts"
+    "threejs/Game.ts",
+    "threejs/Scene.ts"
   ]
 }

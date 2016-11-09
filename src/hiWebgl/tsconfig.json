@@ -12,6 +12,8 @@
     "until/Vector4.ts",
     "until/Matrix4.ts",
     "until/Director.ts",
-    "useFile/lightCube.ts"
+    "until/CubeData.ts",
+    "until/PlaneData.ts",
+    "useFile/fbo.ts"
   ]
 }
