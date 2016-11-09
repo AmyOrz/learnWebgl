@@ -115,7 +115,7 @@ function main() {
 }
 
 function initVertexBuffers(gl) { // Create a sphere
-  var SPHERE_DIV = 13;
+  var SPHERE_DIV = 36;
 
   var i, ai, si, ci;
   var j, aj, sj, cj;

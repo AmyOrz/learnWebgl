@@ -2,15 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1ab1a5db-83b3-4b86-82ce-5a83ba76348e" name="Default" comment="">
+<<<<<<< HEAD
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/hiWebgl/until/CubeData.ts" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/hiWebgl/until/PlaneData.ts" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/hiWebgl/useFile/fbo.ts" />
       <change type="MOVED" beforePath="$PROJECT_DIR$/src/ts/Game.ts" afterPath="$PROJECT_DIR$/src/threejs/Game.ts" />
       <change type="MOVED" beforePath="$PROJECT_DIR$/src/ts/Scene.ts" afterPath="$PROJECT_DIR$/src/threejs/Scene.ts" />
+=======
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/hiWebgl/useFile/pointLight.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/typescript-compiler.xml" afterPath="$PROJECT_DIR$/.idea/typescript-compiler.xml" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dist/fck.js.map" afterPath="$PROJECT_DIR$/src/dist/fck.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dist/hiWebGl.js" afterPath="$PROJECT_DIR$/src/dist/hiWebGl.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/dist/hiWebGl.js.map" afterPath="$PROJECT_DIR$/src/dist/hiWebGl.js.map" />
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/hiWebgl/tsconfig.json" afterPath="$PROJECT_DIR$/src/hiWebgl/tsconfig.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts" afterPath="$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tsconfig.json" afterPath="$PROJECT_DIR$/src/tsconfig.json" />
@@ -19,6 +25,11 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/webglGuide/ch10/LookAtBlendedTriangles.js" afterPath="$PROJECT_DIR$/src/webglGuide/ch10/LookAtBlendedTriangles.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/webglGuide/ch10/ProgramObject.js" afterPath="$PROJECT_DIR$/src/webglGuide/ch10/ProgramObject.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/webglGuide/lib/webgl.js" afterPath="$PROJECT_DIR$/src/webglGuide/lib/webgl.js" />
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts" afterPath="$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.js" afterPath="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.js" afterPath="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.js" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
     </list>
     <ignored path="learnWebgl.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -40,6 +51,7 @@
     <favorites_list name="learnWebgl" />
   </component>
   <component name="FileEditorManager">
+<<<<<<< HEAD
     <splitter split-orientation="horizontal" split-proportion="0.4209884">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
@@ -48,6 +60,16 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="608">
                   <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+=======
+    <splitter split-orientation="horizontal" split-proportion="0.46916184">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="pointLight.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/pointLight.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="620">
+                  <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
                   <folding />
                 </state>
               </provider>
@@ -56,12 +78,21 @@
         </leaf>
       </split-first>
       <split-second>
+<<<<<<< HEAD
         <leaf>
           <file leaf-file-name="FramebufferObject.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/webglGuide/ch10/FramebufferObject.js">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="525">
                   <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
+=======
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="PointLightedCube_perFragment.js" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedCube_perFragment.js">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="347">
+                  <caret line="98" column="63" selection-start-line="98" selection-start-column="63" selection-end-line="98" selection-end-column="63" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                   </folding>
@@ -69,8 +100,13 @@
               </provider>
             </entry>
           </file>
+<<<<<<< HEAD
           <file leaf-file-name="FramebufferObject.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/webglGuide/ch10/FramebufferObject.html">
+=======
+          <file leaf-file-name="PointLightedSphere.html" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.html">
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="0">
                   <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -104,7 +140,10 @@
         <option value="$PROJECT_DIR$/src/hiWebgl/useFile/perspectiveView.ts" />
         <option value="$PROJECT_DIR$/webgl.html" />
         <option value="$PROJECT_DIR$/src/hiWebgl/until/Director.ts" />
+        <option value="$PROJECT_DIR$/src/dist/wd.ts" />
+        <option value="$PROJECT_DIR$/src/hiWebgl/useFile/pointLight.ts" />
         <option value="$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/src/webglGuide/ch10/LookAtBlendedTriangles.js" />
         <option value="$PROJECT_DIR$/src/webglGuide/ch10/ProgramObject.js" />
         <option value="$PROJECT_DIR$/src/webglGuide/ch10/Shadow.js" />
@@ -114,6 +153,10 @@
         <option value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts" />
         <option value="$PROJECT_DIR$/src/hiWebgl/useFile/fbo.ts" />
         <option value="$PROJECT_DIR$/src/webglGuide/ch10/FramebufferObject.js" />
+=======
+        <option value="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.js" />
+        <option value="$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.js" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       </list>
     </option>
   </component>
@@ -129,10 +172,16 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
+<<<<<<< HEAD
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1924" />
     <option name="height" value="1056" />
+=======
+    <option name="y" value="24" />
+    <option name="width" value="1920" />
+    <option name="height" value="993" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -159,8 +208,11 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+<<<<<<< HEAD
       <pane id="Scratches" />
       <pane id="Scope" />
+=======
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -229,6 +281,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -248,6 +301,27 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="hiWebgl" />
+=======
+              <option name="myItemId" value="ch08" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="learnWebgl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="learnWebgl" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="hiWebgl" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -269,12 +343,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="until" />
+              <option name="myItemId" value="useFile" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -282,10 +358,10 @@
     <property name="HbShouldOpenHtmlAsHb" value="" />
     <property name="prop_add_unversioned_files" value="true" />
     <property name="js-jscs-nodeInterpreter" value="D:\Program Files (x86)\nodejs\node.exe" />
-    <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="nodejs_interpreter_path" value="D:/Program Files (x86)/nodejs/node" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="D:/arvin/webgl/Wonder.js-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../LeetCode" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -360,14 +436,23 @@
       <workItem from="1478067682186" duration="1151000" />
       <workItem from="1478075913714" duration="6803000" />
       <workItem from="1478140979806" duration="5000" />
+<<<<<<< HEAD
       <workItem from="1478153936446" duration="12221000" />
       <workItem from="1478242004773" duration="684000" />
       <workItem from="1478560952641" duration="6000" />
       <workItem from="1478660330753" duration="21674000" />
+=======
+      <workItem from="1478153936446" duration="8786000" />
+      <workItem from="1478488144030" duration="49000" />
+      <workItem from="1478491034361" duration="1568000" />
+      <workItem from="1478497836647" duration="30000" />
+      <workItem from="1478514092404" duration="2685000" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="42544000" />
   </component>
   <component name="ToolWindowManager">
@@ -377,6 +462,17 @@
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.077006504" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13096501" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+=======
+    <option name="totallyTimeSpent" value="21077000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="24" width="1920" height="993" extended-state="6" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.05027933" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20400633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -404,8 +500,13 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Gulp" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.077006504" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13096501" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+=======
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.05027933" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20400633" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329718" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -430,6 +531,52 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/typings/three/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119574">
+          <caret line="5695" column="64" selection-start-line="5695" selection-start-column="64" selection-end-line="5695" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webgl.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/tsconfig.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/LightedCube_animation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/perspectiveView.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1500">
@@ -449,6 +596,31 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+<<<<<<< HEAD
+=======
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/perspectiveView.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1500">
+          <caret line="60" column="44" selection-start-line="60" selection-start-column="44" selection-end-line="60" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="19" column="30" selection-start-line="19" selection-start-column="30" selection-end-line="19" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/LightedCube_animation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
         </state>
       </provider>
     </entry>
@@ -484,7 +656,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25">
           <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -539,13 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedCube.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/LightedTranslatedRotatedCube.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -588,6 +752,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -620,11 +785,25 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+=======
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="15051" column="4" selection-start-line="15051" selection-start-column="4" selection-end-line="15051" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/until/Director.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1475">
+          <caret line="59" column="45" selection-start-line="59" selection-start-column="45" selection-end-line="59" selection-end-column="45" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/typings/three/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="281">
           <caret line="5695" column="64" selection-start-line="5695" selection-start-column="64" selection-end-line="5695" selection-end-column="64" />
         </state>
@@ -635,6 +814,10 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+=======
+        <state relative-caret-position="119574">
+          <caret line="5695" column="64" selection-start-line="5695" selection-start-column="64" selection-end-line="5695" selection-end-column="64" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
         </state>
       </provider>
     </entry>
@@ -684,6 +867,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/webglGuide/ch10/ProgramObject.js">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="350">
           <caret line="116" column="22" selection-start-line="116" selection-start-column="22" selection-end-line="116" selection-end-column="22" />
           <folding>
@@ -696,26 +880,43 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+=======
+        <state relative-caret-position="294">
+          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/threejs/Game.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-975">
+=======
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch07/Zfighting.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/LightedCube_animation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2142">
+          <caret line="102" column="11" selection-start-line="102" selection-start-column="11" selection-end-line="102" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/webgl.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
+        <state relative-caret-position="210">
           <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/webglGuide/lib/webgl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1308">
@@ -731,35 +932,83 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="25">
           <caret line="1" column="18" selection-start-line="1" selection-start-column="18" selection-end-line="1" selection-end-column="18" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/dist/wd.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedCube_perFragment.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="84">
+          <caret line="4" column="51" selection-start-line="4" selection-start-column="51" selection-end-line="4" selection-end-column="51" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/hiWebgl/until/CubeData.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="675">
           <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedCube.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/hiWebgl/tsconfig.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
           <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts">
+=======
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="14950" column="26" selection-start-line="14950" selection-start-column="26" selection-end-line="14950" selection-end-column="26" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="117" column="21" selection-start-line="117" selection-start-column="21" selection-end-line="117" selection-end-column="21" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere_perFragment.js">
+      <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
+        <state relative-caret-position="322">
+          <caret line="14950" column="26" selection-start-line="14950" selection-start-column="26" selection-end-line="14950" selection-end-column="26" />
+=======
+        <state relative-caret-position="231">
+          <caret line="123" column="21" selection-start-line="123" selection-start-column="21" selection-end-line="123" selection-end-column="21" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
+          <folding />
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/src/webglGuide/ch10/FramebufferObject.html">
+=======
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedSphere.html">
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -769,12 +1018,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/lightCube.ts">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="556">
           <caret line="62" column="5" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+=======
+        <state relative-caret-position="697">
+          <caret line="48" column="4" selection-start-line="48" selection-start-column="4" selection-end-line="48" selection-end-column="4" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/parasol.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -792,6 +1047,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="608">
           <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
+=======
+    <entry file="file://$PROJECT_DIR$/src/webglGuide/ch08/PointLightedCube_perFragment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="347">
+          <caret line="98" column="63" selection-start-line="98" selection-start-column="63" selection-end-line="98" selection-end-column="63" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/hiWebgl/useFile/pointLight.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="620">
+          <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
           <folding />
         </state>
       </provider>

@@ -29,7 +29,6 @@ namespace Amy{
     if(!program)alert("shader err");
     let n:number = _initVertices();
     if(n<0)alert("vertices err");
-    _initWebglSetting();
 
     let u_MvpMatrix:WebGLUniformLocation = gl.getUniformLocation(program,"u_MvpMatrix");
     let u_NormalMatrix:WebGLUniformLocation = gl.getUniformLocation(program,"u_NormalMatrix");
@@ -47,7 +46,7 @@ namespace Amy{
     let mvpMatrix:Matrix4 = new Matrix4();
     let normalMatrix:Matrix4 = new Matrix4();
 
-    gl.useProgram(program);
+    _initWebglSetting();
     let tick = ()=>{
         currentAngle = _animate(currentAngle);
     //    console.log(currentAngle)

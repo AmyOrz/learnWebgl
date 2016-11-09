@@ -739,8 +739,14 @@ var Amy;
     var g_MvpMatrix = new Amy.Matrix4();
     if (!program)
         alert("shader err");
+<<<<<<< HEAD
     var a_Position = gl.getAttribLocation(program, "a_Position");
     var a_TexCoord = gl.getAttribLocation(program, "a_TexCoord");
+=======
+    var n = _initVertices();
+    if (n < 0)
+        alert("vertices err");
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
     var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
     if (a_Position < 0 || a_TexCoord < 0 || !u_MvpMatrix)
         alert("attrib err");
@@ -757,6 +763,13 @@ var Amy;
     VpFboMatrix.setPerspective(45, 1, 1, 100);
     VpFboMatrix.lookAt(0, 2, 7, 0, 0, 0, 0, 1, 0);
     var currentAngle = 0.0;
+<<<<<<< HEAD
+=======
+    var modelMatrix = new Amy.Matrix4();
+    var mvpMatrix = new Amy.Matrix4();
+    var normalMatrix = new Amy.Matrix4();
+    _initWebglSetting();
+>>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
     var tick = function () {
         currentAngle = animate(currentAngle);
         draw(currentAngle);
