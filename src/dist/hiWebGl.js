@@ -714,193 +714,74 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
-    var VSHADER = "attribute vec4 a_Position;" +
-        "attribute vec2 a_TexCoord;" +
-        "uniform mat4 u_MvpMatrix;" +
-        "varying vec2 v_TexCoord;" +
-        "void main(){" +
-        "gl_Position = u_MvpMatrix * a_Position;" +
-        "v_TexCoord = a_TexCoord;" +
-        "}";
-    var FSHADER = "#ifdef GL_ES\n" +
-        "precision mediump float;\n" +
-        "#endif\n" +
-        "uniform sampler2D u_Sampler;" +
-        "varying vec2 v_TexCoord;" +
-        "void main(){" +
-        "gl_FragColor = texture2D(u_Sampler,v_TexCoord);" +
-        "}";
-    var canvas = document.getElementById("webgl");
-    var director = new Amy.Director();
-    var gl = director.getWebglContext(canvas);
-    var program = director.initShader(VSHADER, FSHADER);
-    var last = Date.now();
-    var g_ModelMatrix = new Amy.Matrix4();
-    var g_MvpMatrix = new Amy.Matrix4();
-    if (!program)
-        alert("shader err");
-<<<<<<< HEAD
-    var a_Position = gl.getAttribLocation(program, "a_Position");
-    var a_TexCoord = gl.getAttribLocation(program, "a_TexCoord");
-=======
-    var n = _initVertices();
-    if (n < 0)
-        alert("vertices err");
->>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
-    var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
-    if (a_Position < 0 || a_TexCoord < 0 || !u_MvpMatrix)
-        alert("attrib err");
-    var cube = initObjectVertex(Amy.CubeData);
-    var plane = initObjectVertex(Amy.PlaneData);
-    var texture = initTexture();
-    var fbo = initFrameBuffer();
-    console.log(plane);
-    initWebglParam();
-    var VpMatrix = new Amy.Matrix4();
-    VpMatrix.setPerspective(45, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
-    VpMatrix.lookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
-    var VpFboMatrix = new Amy.Matrix4();
-    VpFboMatrix.setPerspective(45, 1, 1, 100);
-    VpFboMatrix.lookAt(0, 2, 7, 0, 0, 0, 0, 1, 0);
-    var currentAngle = 0.0;
-<<<<<<< HEAD
-=======
-    var modelMatrix = new Amy.Matrix4();
-    var mvpMatrix = new Amy.Matrix4();
-    var normalMatrix = new Amy.Matrix4();
-    _initWebglSetting();
->>>>>>> d5a2c4fe04c53b30f6b4fa4651e9f6d79e676569
-    var tick = function () {
-        currentAngle = animate(currentAngle);
-        draw(currentAngle);
-    };
-    tick();
-    function draw(angle) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-        gl.viewport(0, 0, 1024, 1024);
-        gl.clearColor(1, 1, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        drawTextureCube(angle, cube, texture);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        drawTexturePlane(angle, plane, fbo.texture);
-    }
-    function drawTexturePlane(angle, obj, texture) {
-        g_ModelMatrix.setTranslate(0, 0, 1);
-        g_ModelMatrix.rotate(20, 1, 0, 0);
-        g_ModelMatrix.rotate(angle, 0, 1, 0);
-        g_MvpMatrix.set(VpFboMatrix);
-        g_MvpMatrix.multiply(g_ModelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, g_MvpMatrix.elements);
-        drawTextureObject(obj, texture);
-    }
-    function drawTextureCube(angle, obj, texture) {
-        g_ModelMatrix.setRotate(20, 1, 0, 0);
-        g_ModelMatrix.rotate(angle, 0, 1, 0);
-        g_MvpMatrix.set(VpMatrix);
-        g_MvpMatrix.multiply(g_ModelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, g_MvpMatrix.elements);
-        drawTextureObject(obj, texture);
-    }
-    function drawTextureObject(obj, texture) {
-        initAttributeVariable(a_Position, obj.vertexBuffer);
-        initAttributeVariable(a_TexCoord, obj.texCoordBuffer);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indexBuffer);
-        gl.drawElements(gl.TRIANGLES, obj.numIndices, obj.indexBuffer.pointType, 0);
-    }
-    function initAttributeVariable(attribute, arrBuffer) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, arrBuffer);
-        gl.vertexAttribPointer(attribute, arrBuffer.pointNumber, arrBuffer.pointType, false, 0, 0);
-        gl.enableVertexAttribArray(attribute);
-    }
-    function animate(angle) {
-        var now = Date.now();
-        var temp = now - last;
-        last = now;
-        var newAngle = angle + (30 * temp) / 1000.0;
-        return newAngle %= 360;
-    }
-    function initWebglParam() {
-        gl.enable(gl.DEPTH_TEST);
-        gl.useProgram(program);
-    }
-    function initFrameBuffer() {
-        var frameBuffer, texture, depthBuffer;
-        var err = function () {
-            if (frameBuffer)
-                gl.deleteFramebuffer(frameBuffer);
-            if (texture)
-                gl.deleteTexture(texture);
-            if (depthBuffer)
-                gl.deleteRenderbuffer(depthBuffer);
-            return null;
-        };
-        frameBuffer = gl.createFramebuffer();
-        texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1024, 1024, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINES);
-        frameBuffer.texture = texture;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-        depthBuffer = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, 1024, 1024);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-        var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-        if (e !== gl.FRAMEBUFFER_COMPLETE) {
-            alert("frame err");
-            return err();
+    var SkyBox = (function () {
+        function SkyBox(_director, _canvas) {
+            this._director = _director;
+            this._canvas = _canvas;
         }
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        return frameBuffer;
-    }
-    function initTexture() {
-        var texture = gl.createTexture();
-        var u_Sampler = gl.getUniformLocation(program, "u_Sampler");
-        if (!u_Sampler)
-            alert("sampler err");
-        var img = new Image();
-        img.onload = function () {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINES);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            gl.uniform1i(u_Sampler, 0);
-            gl.bindTexture(gl.TEXTURE_2D, null);
+        ;
+        SkyBox.prototype.initComponent = function () {
+            this._initWebgl();
+            this._initProgram();
+            var n = this._initVertices();
         };
-        img.src = "./parasol.jpg";
-        return texture;
-    }
-    function initObjectVertex(Object) {
-        var obj = {
-            vertexBuffer: initArrayBuffer(Object.vertices, 3, gl.FLOAT),
-            texCoordBuffer: initArrayBuffer(Object.texCoords, 2, gl.FLOAT),
-            indexBuffer: initElementArrayBuffer(Object.indices, gl.UNSIGNED_BYTE),
-            numIndices: Object.indices.length
+        SkyBox.prototype._initVertices = function () {
+            this._initBufferData("a_Position", Amy.PlaneData.vertices, 3, this._gl.FLOAT);
+            this._initBufferData("a_TexCoord", Amy.PlaneData.texCoords, 2, this._gl.FLOAT);
+            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
+            return 4;
         };
-        return obj;
-    }
-    function initArrayBuffer(arr, num, type) {
-        var buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-        buffer.pointNumber = num;
-        buffer.pointType = type;
-        return buffer;
-    }
-    function initElementArrayBuffer(arr, type) {
-        var buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-        buffer.pointType = type;
-        return buffer;
-    }
+        SkyBox.prototype._initBufferData = function (attribute, attribArray, pointNum, pointType) {
+            var buffer = this._gl.createBuffer();
+            if (!buffer)
+                alert("buffer err");
+            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, buffer);
+            this._gl.bufferData(this._gl.ARRAY_BUFFER, attribArray, this._gl.STATIC_DRAW);
+            var a_Attribute = this._gl.getAttribLocation(this._program, attribute);
+            if (a_Attribute < 0)
+                alert("attribute err");
+            this._gl.vertexAttribPointer(a_Attribute, pointNum, pointType, false, 0, 0);
+            this._gl.enableVertexAttribArray(a_Attribute);
+        };
+        SkyBox.prototype._initWebgl = function () {
+            this._gl = this._director.getWebglContext(this._canvas);
+            this._gl.enable(this._gl.DEPTH_TEST);
+            this._gl.clearColor(0, 0, 0, 1);
+            this._gl.enable(this._gl.CULL_FACE);
+            this._gl.cullFace(this._gl.FRONT);
+        };
+        SkyBox.prototype._initProgram = function () {
+            var VSHADER = this._getVShader();
+            var FSHADER = this._getFShader();
+            this._program = this._director.initShader(VSHADER, FSHADER);
+            if (!this._program)
+                alert("shader err");
+            this._gl.useProgram(this._program);
+        };
+        SkyBox.prototype._getVShader = function () {
+            return "attribute vec4 a_Position;" +
+                "attribute vec2 a_TexCoord;" +
+                "uniform mat4 u_MvpMatrix;" +
+                "varying vec2 v_TexCoord;" +
+                "void main(){" +
+                "gl_Position = u_MvpMatrix * a_Position;" +
+                "v_TexCoord = a_TexCoord;" +
+                "}";
+        };
+        SkyBox.prototype._getFShader = function () {
+            return "#ifdef GL_ES\n" +
+                "precision mediump float;\n" +
+                "#endif\n" +
+                "uniform sampler2D u_Sampler;" +
+                "varying vec2 v_TexCoord;" +
+                "void main(){" +
+                "gl_FragColor = texture2D(u_Sampler,v_TexCoord);" +
+                "}";
+        };
+        return SkyBox;
+    }());
+    Amy.SkyBox = SkyBox;
+    var skyBox = new SkyBox(new Amy.Director(), document.getElementById("webgl"));
+    skyBox.initComponent();
 })(Amy || (Amy = {}));
 //# sourceMappingURL=hiWebGl.js.map

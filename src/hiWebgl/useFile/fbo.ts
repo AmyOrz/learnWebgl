@@ -40,7 +40,6 @@ namespace Amy {
     let plane:VertexObject = initObjectVertex(PlaneData);
     let texture:WebGLTexture = initTexture();
     let fbo:WebGLFramebuffer = initFrameBuffer();
-    console.log(plane)
     initWebglParam();
     let VpMatrix:Matrix4 = new Matrix4();
     VpMatrix.setPerspective(45,canvas.offsetWidth/canvas.offsetHeight,1,100);
@@ -49,6 +48,8 @@ namespace Amy {
     VpFboMatrix.setPerspective(45,1,1,100);
     VpFboMatrix.lookAt(0,2,7,0,0,0,0,1,0);
     let currentAngle:number = 0.0;
+    console.log(gl.TEXTURE_CUBE_MAP_POSITIVE_X);
+    console.log(gl.TEXTURE_CUBE_MAP_POSITIVE_Y);
     let tick = ()=>{
         currentAngle = animate(currentAngle);
         draw(currentAngle);
@@ -71,19 +72,19 @@ namespace Amy {
     }
     function drawTexturePlane(angle:number,obj:VertexObject,texture:WebGLTexture){
         g_ModelMatrix.setTranslate(0,0,1);
-        g_ModelMatrix.rotate(20,1,0,0);
-        g_ModelMatrix.rotate(angle,0,1,0);
+        g_ModelMatrix.rotate(20.0,1.0,0.0,0.0);
+        g_ModelMatrix.rotate(angle,0.0,1.0,0.0);
 
-        g_MvpMatrix.set(VpFboMatrix);
+        g_MvpMatrix.set(VpMatrix);
         g_MvpMatrix.multiply(g_ModelMatrix);
         gl.uniformMatrix4fv(u_MvpMatrix,false,g_MvpMatrix.elements);
 
         drawTextureObject(obj,texture);
     }
     function drawTextureCube(angle:number,obj:VertexObject,texture:WebGLTexture){
-        g_ModelMatrix.setRotate(20,1,0,0);
-        g_ModelMatrix.rotate(angle,0,1,0);
-        g_MvpMatrix.set(VpMatrix);
+        g_ModelMatrix.setRotate(25.0,1.0,0.0,0.0);
+        g_ModelMatrix.rotate(angle,0.0,1.0,0.0);
+        g_MvpMatrix.set(VpFboMatrix);
         g_MvpMatrix.multiply(g_ModelMatrix);
         gl.uniformMatrix4fv(u_MvpMatrix,false,g_MvpMatrix.elements);
 
@@ -92,6 +93,7 @@ namespace Amy {
     function drawTextureObject(obj:VertexObject,texture:WebGLTexture){
         initAttributeVariable(a_Position,obj.vertexBuffer);
         initAttributeVariable(a_TexCoord,obj.texCoordBuffer);
+
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D,texture);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,obj.indexBuffer);
