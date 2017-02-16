@@ -1,104 +1,95 @@
 namespace Amy {
-    let VSHADER_SOURCE:string =
-        "attribute vec4 a_Position;" +
-        "attribute vec2 a_TexCoord;" +
-        "uniform mat4 u_mvpMatrix;" +
-        "varying vec2 v_TexCoord;" +
+    let vs:string =
+        "attribute vec4 a_position;" +
+        "attribute vec2 a_texCoord;" +
+        "varying vec2 v_texCoord;" +
         "void main(){" +
-        "gl_Position = a_Position;" +
-        "v_TexCoord = a_TexCoord;" +
+        "gl_Position = a_position;" +
+        "v_texCoord = a_texCoord;" +
         "}";
-    let FSHADER_SOURCE:string =
+    let fs:string =
         "#ifdef GL_ES\n" +
         "precision mediump float;\n" +
         "#endif\n" +
-        "uniform sampler2D u_Sampler0;" +
-        "uniform sampler2D u_Sampler1;" +
-        "varying vec2 v_TexCoord;" +
+        "uniform sampler2D u_sampler1;" +
+        "uniform sampler2D u_sampler2;" +
+        "varying vec2 v_texCoord;" +
         "void main(){" +
-        "vec4 color0 = texture2D(u_Sampler0,v_TexCoord);" +
-        "vec4 color1 = texture2D(u_Sampler1,v_TexCoord);" +
-        "gl_FragColor = color0 * color1;" +
+        "vec4 color1 = texture2D(u_sampler1,v_texCoord);" +
+        "vec4 color2 = texture2D(u_sampler2,v_texCoord);" +
+        "gl_FragColor = color1 * color2;" +
         "}";
-    let director = new Director();
-    let gl:any = director.getWebglContext(document.getElementById("webgl"));
-    if(!director.initShader(VSHADER_SOURCE,FSHADER_SOURCE))alert("the shader err");
-    let n:number = initVertexBuffer();
-    if(n < 0)console.log("initVertex error;");
-    gl.clearColor(1,0,0,1);
+
+    let canvas:HTMLElement = document.getElementById("webgl");
+    let director:Director = new Director();
+    let gl:WebGLRenderingContext = director.getWebglContext(canvas);
+    let program:WebGLProgram = director.initShader(vs,fs);
+    if(!program)console.log("program error");
+    gl.useProgram(program);
+    let n = initVertexs();
+    gl.clearColor(0.0,0.0,0.0,1.0);
     initTexture();
 
-    function initTexture():void{
-        let texture0 = gl.createTexture();
-        let texture1 = gl.createTexture();
-        if(!texture0 || !texture1)console.log("texture err");
+    function initTexture(){
+        let texture1:WebGLTexture = gl.createTexture();
+        let texture2:WebGLTexture = gl.createTexture();
 
-        let u_Sampler0 = gl.getUniformLocation(gl.program,"u_Sampler0");
-        let u_Sampler1 = gl.getUniformLocation(gl.program,"u_Sampler1");
-        let mvpMatrix = gl.getUniformLocation(gl.program,"u_mvpMatrix");
-        if(!u_Sampler0 || !u_Sampler1)console.log("sampler create err");
+        let u_sampler1:WebGLUniformLocation = gl.getUniformLocation(program,"u_sampler1");
+        let u_sampler2:WebGLUniformLocation = gl.getUniformLocation(program,"u_sampler2");
 
-        let img0 = new Image();
         let img1 = new Image();
+        let img2 = new Image();
 
-        img0.onload = ()=>{
-            loadTexture(texture0,u_Sampler0,img0,0);
-        };
         img1.onload = ()=>{
-            loadTexture(texture1,u_Sampler1,img1,1);
+            drawByImg(img1,texture1,u_sampler1,0);
         };
-
-        img0.src = './src/webglGuide/resources/sky.jpg';
-        img1.src = './src/webglGuide/resources/circle.gif';
+        img2.onload = ()=>{
+            drawByImg(img2,texture2,u_sampler2,1);
+        };
+        img1.src = "2.jpg";
+        img2.src = "12.jpg";
     }
-    let texUnit0:boolean = false;
-    let texUnit1:boolean = false;
-    function loadTexture(texture:any,sampler:any,img:any,unit:number):void{
+    let isLoadTex1:boolean = false;
+    let isLoadTex2:boolean = false;
+    function drawByImg(img:HTMLImageElement,texture:WebGLTexture,sampler:WebGLUniformLocation,texUnit:number){
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);
-        if(unit == 0){
+        if(texUnit == 0){
             gl.activeTexture(gl.TEXTURE0);
-            texUnit0 = true;
-        }else{
+            isLoadTex1 = true;
+        }else if(texUnit == 1){
             gl.activeTexture(gl.TEXTURE1);
-            texUnit1 = true;
+            isLoadTex2 = true;
         }
         gl.bindTexture(gl.TEXTURE_2D,texture);
         gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
         gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);
-        gl.uniform1i(sampler,unit);
-        if(texUnit0 && texUnit1){
-            gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform1i(sampler,texUnit);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        if(isLoadTex1 && isLoadTex2){
             gl.drawArrays(gl.TRIANGLE_STRIP,0,n);
         }
+
     }
-    function initVertexBuffer():number{
-        let vertices:Float32Array = new Float32Array([
+    function initVertexs(){
+        let verticesTexCoords:Float32Array = new Float32Array([
+            // Vertex coordinate, Texture coordinate
             -0.5,  0.5,   0.0, 1.0,
             -0.5, -0.5,   0.0, 0.0,
             0.5,  0.5,   1.0, 1.0,
             0.5, -0.5,   1.0, 0.0,
         ]);
-        let vertexBuffer:any = gl.createBuffer();
-        if(!vertexBuffer){
-            console.log("buffer err");
-            return -1;
-        }
-        gl.bindBuffer(gl.ARRAY_BUFFER,vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+        let n:number = 4;
+        let buffer:WebGLBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+        gl.bufferData(gl.ARRAY_BUFFER,verticesTexCoords,gl.STATIC_DRAW);
+        let size:number = verticesTexCoords.BYTES_PER_ELEMENT;
+        let a_position:number = gl.getAttribLocation(program,"a_position");
+        gl.vertexAttribPointer(a_position,2,gl.FLOAT,false,size*4,0);
+        gl.enableVertexAttribArray(a_position);
 
-        let FSIZE:number = vertexBuffer.BYTES_PER_ELEMENT;
-        let a_Position = gl.getAttribLocation(gl.program,"a_Position");
-        let a_TexCoord = gl.getAttribLocation(gl.program,"a_TexCoord");
-        if(a_Position<0 || a_TexCoord < 0){
-            console.log("aPosition error");
-            return -1;
-        }
-
-        gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,FSIZE*4,0);
-        gl.enableVertexAttribArray(a_Position);
-
-        gl.vertexAttribPointer(a_TexCoord,2,gl.FLOAT,false,FSIZE*4,FSIZE*2);
-        gl.enableVertexAttribArray(a_TexCoord);
-        return 4;
+        let a_texCoord:number = gl.getAttribLocation(program,"a_texCoord");
+        gl.vertexAttribPointer(a_texCoord,2,gl.FLOAT,false,size*4,size*2);
+        gl.enableVertexAttribArray(a_texCoord);
+        return n;
     }
 }

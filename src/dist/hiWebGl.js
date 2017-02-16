@@ -714,74 +714,71 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
-    var SkyBox = (function () {
-        function SkyBox(_director, _canvas) {
-            this._director = _director;
-            this._canvas = _canvas;
-        }
-        ;
-        SkyBox.prototype.initComponent = function () {
-            this._initWebgl();
-            this._initProgram();
-            var n = this._initVertices();
-        };
-        SkyBox.prototype._initVertices = function () {
-            this._initBufferData("a_Position", Amy.PlaneData.vertices, 3, this._gl.FLOAT);
-            this._initBufferData("a_TexCoord", Amy.PlaneData.texCoords, 2, this._gl.FLOAT);
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, null);
-            return 4;
-        };
-        SkyBox.prototype._initBufferData = function (attribute, attribArray, pointNum, pointType) {
-            var buffer = this._gl.createBuffer();
-            if (!buffer)
-                alert("buffer err");
-            this._gl.bindBuffer(this._gl.ARRAY_BUFFER, buffer);
-            this._gl.bufferData(this._gl.ARRAY_BUFFER, attribArray, this._gl.STATIC_DRAW);
-            var a_Attribute = this._gl.getAttribLocation(this._program, attribute);
-            if (a_Attribute < 0)
-                alert("attribute err");
-            this._gl.vertexAttribPointer(a_Attribute, pointNum, pointType, false, 0, 0);
-            this._gl.enableVertexAttribArray(a_Attribute);
-        };
-        SkyBox.prototype._initWebgl = function () {
-            this._gl = this._director.getWebglContext(this._canvas);
-            this._gl.enable(this._gl.DEPTH_TEST);
-            this._gl.clearColor(0, 0, 0, 1);
-            this._gl.enable(this._gl.CULL_FACE);
-            this._gl.cullFace(this._gl.FRONT);
-        };
-        SkyBox.prototype._initProgram = function () {
-            var VSHADER = this._getVShader();
-            var FSHADER = this._getFShader();
-            this._program = this._director.initShader(VSHADER, FSHADER);
-            if (!this._program)
-                alert("shader err");
-            this._gl.useProgram(this._program);
-        };
-        SkyBox.prototype._getVShader = function () {
-            return "attribute vec4 a_Position;" +
-                "attribute vec2 a_TexCoord;" +
-                "uniform mat4 u_MvpMatrix;" +
-                "varying vec2 v_TexCoord;" +
-                "void main(){" +
-                "gl_Position = u_MvpMatrix * a_Position;" +
-                "v_TexCoord = a_TexCoord;" +
-                "}";
-        };
-        SkyBox.prototype._getFShader = function () {
-            return "#ifdef GL_ES\n" +
-                "precision mediump float;\n" +
-                "#endif\n" +
-                "uniform sampler2D u_Sampler;" +
-                "varying vec2 v_TexCoord;" +
-                "void main(){" +
-                "gl_FragColor = texture2D(u_Sampler,v_TexCoord);" +
-                "}";
-        };
-        return SkyBox;
-    }());
-    Amy.SkyBox = SkyBox;
-    var skyBox = new SkyBox(new Amy.Director(), document.getElementById("webgl"));
-    skyBox.initComponent();
+    var vs = "attribute vec4 a_Position;" +
+        "attribute vec4 a_Color;" +
+        "uniform mat4 u_MvpMatrix;" +
+        "varying vec4 v_Color;" +
+        "void main(){" +
+        "gl_Position = u_MvpMatrix * a_Position;" +
+        "v_Color = a_Color;" +
+        "}";
+    var fs = '#ifdef GL_ES\n' +
+        'precision mediump float;\n' +
+        '#endif\n' +
+        "varying vec4 v_Color;" +
+        "void main(){" +
+        "gl_FragColor = v_Color;" +
+        "}";
+    var canvas = document.getElementById("webgl");
+    var director = new Amy.Director();
+    var gl = director.getWebglContext(canvas);
+    var program = director.initShader(vs, fs);
+    if (program == void 0)
+        console.log("program error");
+    gl.useProgram(program);
+    var n = initVertexs();
+    initMatrix();
+    gl.clearColor(0, 0, 0, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, n);
+    function initMatrix() {
+        var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
+        if (!u_MvpMatrix)
+            console.log("mvp matrix error");
+        var projMatrix = new Amy.Matrix4();
+        var viewMatrix = new Amy.Matrix4();
+        var modelMatrix = new Amy.Matrix4();
+        var mvpMatrix = new Amy.Matrix4();
+        modelMatrix.setRotate(0, 0, 0, 1);
+        viewMatrix.setLookAt(0, 3, 5, 0, -15, 0, 0, 1, 0);
+        projMatrix.setPerspective(30, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
+        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
+        gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+    }
+    function initVertexs() {
+        var verticesColors = new Float32Array([
+            0.0, 1.0, -4.0, 0.4, 1.0, 0.4,
+            -0.5, -1.0, -4.0, 0.4, 1.0, 0.4,
+            0.5, -1.0, -4.0, 1.0, 0.4, 0.4,
+            0.0, 1.0, -2.0, 1.0, 1.0, 0.4,
+            -0.5, -1.0, -2.0, 1.0, 1.0, 0.4,
+            0.5, -1.0, -2.0, 1.0, 0.4, 0.4,
+            0.0, 1.0, 0.0, 0.4, 0.4, 1.0,
+            -0.5, -1.0, 0.0, 0.4, 0.4, 1.0,
+            0.5, -1.0, 0.0, 1.0, 0.4, 0.4,
+        ]);
+        var n = 9;
+        var buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
+        var size = verticesColors.BYTES_PER_ELEMENT;
+        var a_Position = gl.getAttribLocation(program, "a_Position");
+        gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, size * 6, 0);
+        gl.enableVertexAttribArray(a_Position);
+        var a_Color = gl.getAttribLocation(program, "a_Color");
+        gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, size * 6, size * 3);
+        gl.enableVertexAttribArray(a_Color);
+        return n;
+    }
 })(Amy || (Amy = {}));
 //# sourceMappingURL=hiWebGl.js.map

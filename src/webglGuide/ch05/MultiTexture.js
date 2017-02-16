@@ -116,7 +116,6 @@ function initTextures(gl, n) {
     console.log('Failed to get the storage location of u_Sampler');
     return false;
   }
-  console.log({}.toString.call(u_Sampler0));
   // Create the image object
   var image0 = new Image();
   var image1 = new Image();
@@ -128,8 +127,8 @@ function initTextures(gl, n) {
   image0.onload = function(){ loadTexture(gl, n, texture0, u_Sampler0, image0, 0); };
   image1.onload = function(){ loadTexture(gl, n, texture1, u_Sampler1, image1, 1); };
   // Tell the browser to load an Image
-  image0.src = '../resources/sky.jpg';
-  image1.src = '../resources/circle.gif';
+  image0.src = '12.jpg';
+  image1.src = '12.jpg';
 
   return true;
 }

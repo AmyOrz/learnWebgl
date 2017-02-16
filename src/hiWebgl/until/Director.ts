@@ -2,7 +2,7 @@ namespace Amy {
     export class Director {
         private _gl: any;
 
-        public getWebglContext(_canvas:any): any {
+        public getWebglContext(_canvas:any):WebGLRenderingContext {
             this._getWebgl(_canvas);
             this._gl.viewportWidth = _canvas.width;
             this._gl.viewportHeight = _canvas.height;
