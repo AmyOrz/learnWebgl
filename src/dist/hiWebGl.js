@@ -733,15 +733,14 @@ var Amy;
     var director = new Amy.Director();
     var gl = director.getWebglContext(canvas);
     var program = director.initShader(vs, fs);
-    if (program == void 0)
+    if (!program)
         console.log("program error");
     gl.useProgram(program);
+    gl.enable(gl.DEPTH_TEST);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     var n = initVertexs();
-    initMatrix();
-    gl.clearColor(0, 0, 0, 1);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.TRIANGLES, 0, n);
-    function initMatrix() {
+    initMatrixAndDraw();
+    function initMatrixAndDraw() {
         var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
         if (!u_MvpMatrix)
             console.log("mvp matrix error");
@@ -749,33 +748,45 @@ var Amy;
         var viewMatrix = new Amy.Matrix4();
         var modelMatrix = new Amy.Matrix4();
         var mvpMatrix = new Amy.Matrix4();
-        modelMatrix.setRotate(0, 0, 0, 1);
-        viewMatrix.setLookAt(0, 3, 5, 0, -15, 0, 0, 1, 0);
+        modelMatrix.setTranslate(0.75, 0, 0);
+        viewMatrix.setLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
         projMatrix.setPerspective(30, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
         mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
         gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, n);
+        modelMatrix.setTranslate(-0.75, 0, 0);
+        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
+        gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+        gl.drawArrays(gl.TRIANGLES, 0, n);
     }
     function initVertexs() {
         var verticesColors = new Float32Array([
-            0.0, 1.0, -4.0, 0.4, 1.0, 0.4,
-            -0.5, -1.0, -4.0, 0.4, 1.0, 0.4,
-            0.5, -1.0, -4.0, 1.0, 0.4, 0.4,
-            0.0, 1.0, -2.0, 1.0, 1.0, 0.4,
-            -0.5, -1.0, -2.0, 1.0, 1.0, 0.4,
-            0.5, -1.0, -2.0, 1.0, 0.4, 0.4,
+            0.0, 1.0, 4.0, 0.4, 1.0, 0.4,
+            -0.5, -1.0, 4.0, 0.4, 1.0, 0.4,
+            0.5, -1.0, 4.0, 1.0, 0.4, 0.4,
+            0.0, 1.0, 2.0, 1.0, 1.0, 0.4,
+            -0.5, -1.0, 2.0, 1.0, 1.0, 0.4,
+            0.5, -1.0, 2.0, 1.0, 0.4, 0.4,
             0.0, 1.0, 0.0, 0.4, 0.4, 1.0,
             -0.5, -1.0, 0.0, 0.4, 0.4, 1.0,
             0.5, -1.0, 0.0, 1.0, 0.4, 0.4,
         ]);
         var n = 9;
         var buffer = gl.createBuffer();
+        if (!buffer)
+            console.log("buffer error");
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
         gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
         var size = verticesColors.BYTES_PER_ELEMENT;
         var a_Position = gl.getAttribLocation(program, "a_Position");
+        if (a_Position < 0)
+            console.log("position error");
         gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, size * 6, 0);
         gl.enableVertexAttribArray(a_Position);
         var a_Color = gl.getAttribLocation(program, "a_Color");
+        if (a_Color < 0)
+            console.log("color error");
         gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, size * 6, size * 3);
         gl.enableVertexAttribArray(a_Color);
         return n;
