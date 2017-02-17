@@ -694,6 +694,14 @@ var Amy;
             0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0,
             0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0
         ]);
+        CubeData.color = new Float32Array([
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0,
+            1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+            1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+            1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1,
+            0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1
+        ]);
         return CubeData;
     }());
     Amy.CubeData = CubeData;
@@ -715,81 +723,96 @@ var Amy;
 var Amy;
 (function (Amy) {
     var vs = "attribute vec4 a_Position;" +
-        "attribute vec4 a_Color;" +
+        "attribute vec4 a_Normal;" +
         "uniform mat4 u_MvpMatrix;" +
+        "uniform mat4 u_NormalMatrix;" +
+        "uniform mat4 u_ModelMatrix;" +
         "varying vec4 v_Color;" +
+        "varying vec3 v_Normal;" +
+        "varying vec3 v_Position;" +
         "void main(){" +
+        "vec4 color = vec4(1.0,1.0,1.0,1.0);" +
         "gl_Position = u_MvpMatrix * a_Position;" +
-        "v_Color = a_Color;" +
+        "v_Position = vec3(u_ModelMatrix * a_Position);" +
+        "v_Normal = normalize(vec3(u_NormalMatrix * a_Normal));" +
+        "v_Color = color;" +
         "}";
     var fs = '#ifdef GL_ES\n' +
         'precision mediump float;\n' +
         '#endif\n' +
-        "varying vec4 v_Color;" +
-        "void main(){" +
-        "gl_FragColor = v_Color;" +
-        "}";
+        'uniform vec3 u_Diffuse;' +
+        'uniform vec3 u_Ambient;' +
+        'uniform vec3 u_LightPosition;' +
+        'varying vec3 v_Normal;' +
+        'varying vec3 v_Position;' +
+        'varying vec4 v_Color;' +
+        'void main(){' +
+        'vec3 normal = normalize(v_Normal);' +
+        'vec3 lightDirection = normalize(u_LightPosition - v_Position);' +
+        'float nDotL = max(dot(lightDirection,normal),0.0);' +
+        'vec3 diffuse = u_Diffuse * v_Color.rgb * nDotL;' +
+        'vec3 ambient = u_Ambient * v_Color.rgb;' +
+        'gl_FragColor = vec4(diffuse + ambient,v_Color.a);' +
+        '}';
     var canvas = document.getElementById("webgl");
     var director = new Amy.Director();
     var gl = director.getWebglContext(canvas);
     var program = director.initShader(vs, fs);
     if (!program)
         console.log("program error");
-    gl.useProgram(program);
-    gl.enable(gl.DEPTH_TEST);
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     var n = initVertexs();
-    initMatrixAndDraw();
-    function initMatrixAndDraw() {
-        var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
-        if (!u_MvpMatrix)
-            console.log("mvp matrix error");
-        var projMatrix = new Amy.Matrix4();
-        var viewMatrix = new Amy.Matrix4();
-        var modelMatrix = new Amy.Matrix4();
-        var mvpMatrix = new Amy.Matrix4();
-        modelMatrix.setTranslate(0.75, 0, 0);
-        viewMatrix.setLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
-        projMatrix.setPerspective(30, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
-        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.drawArrays(gl.TRIANGLES, 0, n);
-        modelMatrix.setTranslate(-0.75, 0, 0);
-        mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
-        gl.drawArrays(gl.TRIANGLES, 0, n);
+    setColorAndDepth();
+    function setColorAndDepth() {
+        gl.clearColor(0, 0, 0, 1);
+        gl.enable(gl.DEPTH_TEST);
     }
     function initVertexs() {
-        var verticesColors = new Float32Array([
-            0.0, 1.0, 4.0, 0.4, 1.0, 0.4,
-            -0.5, -1.0, 4.0, 0.4, 1.0, 0.4,
-            0.5, -1.0, 4.0, 1.0, 0.4, 0.4,
-            0.0, 1.0, 2.0, 1.0, 1.0, 0.4,
-            -0.5, -1.0, 2.0, 1.0, 1.0, 0.4,
-            0.5, -1.0, 2.0, 1.0, 0.4, 0.4,
-            0.0, 1.0, 0.0, 0.4, 0.4, 1.0,
-            -0.5, -1.0, 0.0, 0.4, 0.4, 1.0,
-            0.5, -1.0, 0.0, 1.0, 0.4, 0.4,
-        ]);
-        var n = 9;
+        var SPHERE_DIV = 36;
+        var i, ai, si, ci;
+        var j, aj, sj, cj;
+        var p1, p2;
+        var positions = [];
+        var indices = [];
+        for (j = 0; j <= SPHERE_DIV; j++) {
+            aj = j * Math.PI / SPHERE_DIV;
+            sj = Math.sin(aj);
+            cj = Math.cos(aj);
+            for (i = 0; i <= SPHERE_DIV; i++) {
+                ai = i * 2 * Math.PI / SPHERE_DIV;
+                si = Math.sin(ai);
+                ci = Math.cos(ai);
+                positions.push(si * sj);
+                positions.push(cj);
+                positions.push(ci * sj);
+            }
+        }
+        for (j = 0; j < SPHERE_DIV; j++) {
+            for (i = 0; i < SPHERE_DIV; i++) {
+                p1 = j * (SPHERE_DIV + 1) + i;
+                p2 = p1 + (SPHERE_DIV + 1);
+                indices.push(p1);
+                indices.push(p2);
+                indices.push(p1 + 1);
+                indices.push(p1 + 1);
+                indices.push(p2);
+                indices.push(p2 + 1);
+            }
+        }
+        initArrayBuffer("a_Position", new Float32Array(positions), 3);
+        initArrayBuffer("a_Normal", new Float32Array(positions), 3);
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        var indexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Int16Array(indices), gl.STATIC_DRAW);
+        return indices.length;
+    }
+    function initArrayBuffer(attribute, data, size) {
+        var a_attribute = gl.getAttribLocation(program, attribute);
         var buffer = gl.createBuffer();
-        if (!buffer)
-            console.log("buffer error");
         gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
-        var size = verticesColors.BYTES_PER_ELEMENT;
-        var a_Position = gl.getAttribLocation(program, "a_Position");
-        if (a_Position < 0)
-            console.log("position error");
-        gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, size * 6, 0);
-        gl.enableVertexAttribArray(a_Position);
-        var a_Color = gl.getAttribLocation(program, "a_Color");
-        if (a_Color < 0)
-            console.log("color error");
-        gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, size * 6, size * 3);
-        gl.enableVertexAttribArray(a_Color);
-        return n;
+        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+        gl.vertexAttribPointer(a_attribute, size, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(a_attribute);
     }
 })(Amy || (Amy = {}));
 //# sourceMappingURL=hiWebGl.js.map
