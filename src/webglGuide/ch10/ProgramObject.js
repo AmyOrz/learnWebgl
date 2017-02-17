@@ -231,7 +231,7 @@ function initTextures(gl, program) {
   };
 
   // Tell the browser to load an Image
-  image.src = '../resources/orange.jpg';
+  image.src = '12n .jpg';
 
   return texture;
 }

@@ -42,7 +42,7 @@ namespace Amy{
     if(!program)console.log("program error");
     let n:number = initVertexs();
     setColorAndDepth();
-    
+
 
 
     function setColorAndDepth(){

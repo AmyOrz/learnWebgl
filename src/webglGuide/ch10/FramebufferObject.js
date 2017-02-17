@@ -79,11 +79,11 @@ function main() {
 
   var viewProjMatrix = new Matrix4();   // Prepare view projection matrix for color buffer
   viewProjMatrix.setPerspective(30, canvas.width/canvas.height, 1.0, 100.0);
-  viewProjMatrix.lookAt(0.0, 0.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  viewProjMatrix.lookAt(4.0, -4.0, 7.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
   var viewProjMatrixFBO = new Matrix4();   // Prepare view projection matrix for FBO
   viewProjMatrixFBO.setPerspective(30.0, OFFSCREEN_WIDTH/OFFSCREEN_HEIGHT, 1.0, 100.0);
-  viewProjMatrixFBO.lookAt(0.0, 1.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  viewProjMatrixFBO.lookAt(0.0, 4.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
   // Start drawing
   var currentAngle = 0.0; // Current rotation angle (degrees)
@@ -255,7 +255,7 @@ function initTextures(gl) {
   };
 
   // Tell the browser to load an Image  
-  image.src = '../resources/sky.jpg';
+  image.src = '12.jpg';
 
   return texture;
 }

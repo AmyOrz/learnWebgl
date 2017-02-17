@@ -1,4 +1,20 @@
 namespace Amy {
+    type arrayBuffer = {
+        attribute:string;
+        size:number;
+        type:number;
+        data:Float32Array|Int16Array|Int8Array;
+    }
+    type elementArrayBuffer = {
+        attribute:string;
+        type:number;
+        data:Float32Array|Int16Array|Int8Array;
+    }
+    type textureBuffer = {
+        sampler:WebGLUniformLocation;
+        src:string;
+
+    }
     export class Director {
         private _gl: any;
 
@@ -30,6 +46,58 @@ namespace Amy {
                 return;
             }
             return program;
+        }
+        public initArrayBuffer(param:arrayBuffer):WebGLBuffer{
+            let buffer:WebGLBuffer = this._gl.createBuffer();
+            if(!buffer)console.log("buffer create error");
+            this._gl.bindBuffer(this._gl.ARRAY_BUFFER,buffer);
+            this._gl.bufferData(this._gl.ARRAY_BUFFER,param.data,this._gl.STATIC_DRAW);
+            buffer.pointNumber = param.size;
+            buffer.pointType = param.type;
+            return buffer;
+        }
+        public initElementArrayBuffer(param:elementArrayBuffer):WebGLBuffer{
+            let buffer:WebGLBuffer = this._gl.createBuffer();
+            if(!buffer)console.log("buffer create error");
+            this._gl.bindBuffer(this._gl.ELEMENT_ARRAY_BUFFER,buffer);
+            this._gl.bufferData(this._gl.ELEMENT_ARRAY_BUFFER,param.data,this._gl.STATIC_DRAW);
+            buffer.pointType = param.type;
+            return buffer;
+        }
+        public initTextureBuffer(param:textureBuffer):WebGLTexture{
+            let texBuffer:WebGLTexture = this._gl.createTexture();
+            if(!texBuffer)console.log("texture buffer error");
+            let img:HTMLImageElement = new Image();
+            img.onload = ()=>{
+                this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL,1);
+                this._gl.activeTexture(this._gl.Texture0);
+                this._gl.bindTexture(this._gl.TEXTURE_2D,texBuffer);
+                this._gl.texParameteri(this._gl.TEXTURE_2D,this._gl.TEXTURE_MIN_FILTER,this._gl.LINEAR);
+                this._gl.texImage2D(this._gl.TEXTURE_2D,0,this._gl.RGBA,this._gl.RGBA,this._gl.UNSIGNED_BYTE,img);
+                this._gl.uniform1i(param.sampler,0);
+                this._gl.bindTexture(this._gl.TEXTURE_2D,null);
+            };
+            img.src = param.src;
+
+            return texBuffer;
+        }
+        public initFrameBuffer(){
+            let frameBuffer:WebGLFramebuffer = this._gl.createFramebuffer();
+            let texture:WebGLTexture = this._gl.createTexture();
+            let depth:WebGLRenderbuffer = this._gl.createRenderbuffer();
+
+            if (!frameBuffer || !texture || !depth) {
+                console.log('Failed to create frame buffer object');
+                return;
+            }
+            this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
+            this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, this._gl.viewportWidth,this._gl.viewportHeight, 0, this._gl.RGBA, this._gl.UNSIGNED_BYTE, null);
+            this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.LINEAR);
+            frameBuffer.texture = texture;
+
+            this._gl.bindFramebuffer(this._gl.FRAMEBUFFER,frameBuffer);
+            this._gl.framebufferTexture2D(this._gl.FRAMEBUFFER,this._gl.COLOR_ATTACHMENT0,this._gl.)
+
         }
         private _setColor(R: number, G: number, B: number, A: number): void {
             this._gl.clearColor(R, G, B, A);

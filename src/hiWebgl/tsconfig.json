@@ -14,6 +14,6 @@
     "until/Director.ts",
     "until/CubeData.ts",
     "until/PlaneData.ts",
-    "useFile/pointLight.ts"
+    "useFile/fbo.ts"
   ]
 }

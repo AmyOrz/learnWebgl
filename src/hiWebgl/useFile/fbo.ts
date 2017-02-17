@@ -48,8 +48,7 @@ namespace Amy {
     VpFboMatrix.setPerspective(45,1,1,100);
     VpFboMatrix.lookAt(0,2,7,0,0,0,0,1,0);
     let currentAngle:number = 0.0;
-    console.log(gl.TEXTURE_CUBE_MAP_POSITIVE_X);
-    console.log(gl.TEXTURE_CUBE_MAP_POSITIVE_Y);
+
     let tick = ()=>{
         currentAngle = animate(currentAngle);
         draw(currentAngle);
@@ -165,7 +164,7 @@ namespace Amy {
 
             gl.bindTexture(gl.TEXTURE_2D,null);
         };
-        img.src = "./parasol.jpg";
+        img.src = "12.jpg";
         return texture;
     }
     function initObjectVertex(Object:any):VertexObject{
