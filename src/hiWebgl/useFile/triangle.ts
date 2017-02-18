@@ -16,6 +16,7 @@ namespace Amy{
     let gl:WebGLRenderingContext = director.getWebglContext(canvas);
     let program:WebGLProgram = director.initShader(vshader,fshader);
 
+    director.setAttributeInPogram(program);
     let u_FragColor:WebGLUniformLocation = gl.getUniformLocation(program,"u_FragColor");
     let modelMatrix:WebGLUniformLocation = gl.getUniformLocation(program,"modelMatrix");
     gl.useProgram(program);

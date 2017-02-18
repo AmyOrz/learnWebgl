@@ -45,7 +45,7 @@ function main() {
   // Get the storage location of attribute variables and uniform variables
   var program = gl.program; // Get program object
   program.a_Position = gl.getAttribLocation(program, 'a_Position');
-  program.a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord');
+  program.a_TexCoord = gl.getAttribLocation(program, 'a_TexCoord');  c
   program.u_MvpMatrix = gl.getUniformLocation(program, 'u_MvpMatrix');
   if (program.a_Position < 0 || program.a_TexCoord < 0 || !program.u_MvpMatrix) {
     console.log('Failed to get the storage location of a_Position, a_TexCoord, u_MvpMatrix');
@@ -327,7 +327,7 @@ function draw(gl, canvas, fbo, plane, cube, angle, texture, viewProjMatrix, view
   gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT); // Set a viewport for FBO
   //gl.viewport(0, 0, 2048, 2048); // Set a viewport for FBO
 
-  gl.clearColor(0.2, 0.2, 0.4, 1.0); // Set clear color (the color is slightly changed)
+  gl.clearColor(1.1, 0.0, 0.4, 1.0); // Set clear color (the color is slightly changed)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // Clear FBO
 
   drawTexturedCube(gl, gl.program, cube, angle, texture, viewProjMatrixFBO);   // Draw the cube

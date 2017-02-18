@@ -589,8 +589,23 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
+    var Program = (function () {
+        function Program() {
+            this.a_Position = null;
+            this.a_TexCoord = null;
+            this.a_Color = null;
+            this.u_MvpMatrix = null;
+            this.u_ModelMatrix = null;
+        }
+        return Program;
+    }());
+    Amy.Program = Program;
+})(Amy || (Amy = {}));
+var Amy;
+(function (Amy) {
     var Director = (function () {
         function Director() {
+            this.attr = {};
         }
         Director.prototype.getWebglContext = function (_canvas) {
             this._getWebgl(_canvas);
@@ -646,7 +661,7 @@ var Amy;
             var img = new Image();
             img.onload = function () {
                 _this._gl.pixelStorei(_this._gl.UNPACK_FLIP_Y_WEBGL, 1);
-                _this._gl.activeTexture(_this._gl.Texture0);
+                _this._gl.activeTexture(_this._gl.TEXTURE0);
                 _this._gl.bindTexture(_this._gl.TEXTURE_2D, texBuffer);
                 _this._gl.texParameteri(_this._gl.TEXTURE_2D, _this._gl.TEXTURE_MIN_FILTER, _this._gl.LINEAR);
                 _this._gl.texImage2D(_this._gl.TEXTURE_2D, 0, _this._gl.RGBA, _this._gl.RGBA, _this._gl.UNSIGNED_BYTE, img);
@@ -682,6 +697,19 @@ var Amy;
             this._gl.bindTexture(this._gl.TEXTURE_2D, null);
             this._gl.bindRenderbuffer(this._gl.RENDERBUFFER, null);
             return frameBuffer;
+        };
+        Director.prototype.getAttr = function () {
+            return this.attr;
+        };
+        Director.prototype.setAttributeInPogram = function (program, attributes) {
+            for (var i = 0, len = attributes.length; i < len; i++) {
+                this.attr[attributes[i]] = this._gl.getAttribLocation(program, attributes[i]);
+            }
+        };
+        Director.prototype.setUniformInPogram = function (program, uniforms) {
+            for (var i = 0, len = uniforms.length; i < len; i++) {
+                this.attr[uniforms[i]] = this._gl.getAttribLocation(program, uniforms[i]);
+            }
         };
         Director.prototype._setColor = function (R, G, B, A) {
             this._gl.clearColor(R, G, B, A);
@@ -786,7 +814,7 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
-    var VSHADER = "attribute vec4 a_Position;" +
+    var vs = "attribute vec4 a_Position;" +
         "attribute vec2 a_TexCoord;" +
         "uniform mat4 u_MvpMatrix;" +
         "varying vec2 v_TexCoord;" +
@@ -794,171 +822,83 @@ var Amy;
         "gl_Position = u_MvpMatrix * a_Position;" +
         "v_TexCoord = a_TexCoord;" +
         "}";
-    var FSHADER = "#ifdef GL_ES\n" +
-        "precision mediump float;\n" +
-        "#endif\n" +
-        "uniform sampler2D u_Sampler;" +
-        "varying vec2 v_TexCoord;" +
-        "void main(){" +
-        "gl_FragColor = texture2D(u_Sampler,v_TexCoord);" +
-        "}";
+    var fs = '#ifdef GL_ES\n' +
+        'precision mediump float;\n' +
+        '#endif\n' +
+        'uniform sampler2D sampler;' +
+        'varying vec2 v_TexCoord;' +
+        'void main(){' +
+        'gl_FragColor = texture2D(sampler,v_TexCoord);' +
+        '}';
     var canvas = document.getElementById("webgl");
     var director = new Amy.Director();
     var gl = director.getWebglContext(canvas);
-    var program = director.initShader(VSHADER, FSHADER);
-    var last = Date.now();
-    var g_ModelMatrix = new Amy.Matrix4();
-    var g_MvpMatrix = new Amy.Matrix4();
+    var program = director.initShader(vs, fs);
     if (!program)
-        alert("shader err");
-    var a_Position = gl.getAttribLocation(program, "a_Position");
-    var a_TexCoord = gl.getAttribLocation(program, "a_TexCoord");
-    var u_MvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
-    if (a_Position < 0 || a_TexCoord < 0 || !u_MvpMatrix)
-        alert("attrib err");
-    var cube = initObjectVertex(Amy.CubeData);
-    var plane = initObjectVertex(Amy.PlaneData);
-    var texture = initTexture();
-    var fbo = initFrameBuffer();
-    initWebglParam();
-    var VpMatrix = new Amy.Matrix4();
-    VpMatrix.setPerspective(45, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
-    VpMatrix.lookAt(0, 0, 7, 0, 0, 0, 0, 1, 0);
-    var VpFboMatrix = new Amy.Matrix4();
-    VpFboMatrix.setPerspective(45, 1, 1, 100);
-    VpFboMatrix.lookAt(0, 2, 7, 0, 0, 0, 0, 1, 0);
-    var currentAngle = 0.0;
-    var tick = function () {
-        currentAngle = animate(currentAngle);
-        draw(currentAngle);
-    };
-    tick();
-    function draw(angle) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-        gl.viewport(0, 0, 1024, 1024);
-        gl.clearColor(1, 1, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        drawTextureCube(angle, cube, texture);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, canvas.offsetWidth, canvas.offsetHeight);
-        gl.clearColor(0, 0, 0, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        drawTexturePlane(angle, plane, fbo.texture);
+        console.log("program is error");
+    gl.useProgram(program);
+    var attr = getAttrAndUniform();
+    var cube = initCubeParam();
+    var plane = initPlaneParam();
+    if (!cube || !plane)
+        console.log("cube or plane error");
+    var texture = director.initTextureBuffer({
+        sampler: gl.getUniformLocation(program, "sampler"),
+        src: "12.jpg"
+    });
+    if (!texture)
+        console.log("texture is error");
+    var fbo = director.initFrameBuffer(2048, 2048);
+    if (!fbo)
+        console.log("fbo is error");
+    function getAttrAndUniform() {
+        director.setAttributeInPogram(program, ["a_Position", "a_TexCoord"]);
+        director.setUniformInPogram(program, ["u_MvpMatrix"]);
+        return director.getAttr();
     }
-    function drawTexturePlane(angle, obj, texture) {
-        g_ModelMatrix.setTranslate(0, 0, 1);
-        g_ModelMatrix.rotate(20.0, 1.0, 0.0, 0.0);
-        g_ModelMatrix.rotate(angle, 0.0, 1.0, 0.0);
-        g_MvpMatrix.set(VpMatrix);
-        g_MvpMatrix.multiply(g_ModelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, g_MvpMatrix.elements);
-        drawTextureObject(obj, texture);
-    }
-    function drawTextureCube(angle, obj, texture) {
-        g_ModelMatrix.setRotate(25.0, 1.0, 0.0, 0.0);
-        g_ModelMatrix.rotate(angle, 0.0, 1.0, 0.0);
-        g_MvpMatrix.set(VpFboMatrix);
-        g_MvpMatrix.multiply(g_ModelMatrix);
-        gl.uniformMatrix4fv(u_MvpMatrix, false, g_MvpMatrix.elements);
-        drawTextureObject(obj, texture);
-    }
-    function drawTextureObject(obj, texture) {
-        initAttributeVariable(a_Position, obj.vertexBuffer);
-        initAttributeVariable(a_TexCoord, obj.texCoordBuffer);
-        gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indexBuffer);
-        gl.drawElements(gl.TRIANGLES, obj.numIndices, obj.indexBuffer.pointType, 0);
-    }
-    function initAttributeVariable(attribute, arrBuffer) {
-        gl.bindBuffer(gl.ARRAY_BUFFER, arrBuffer);
-        gl.vertexAttribPointer(attribute, arrBuffer.pointNumber, arrBuffer.pointType, false, 0, 0);
-        gl.enableVertexAttribArray(attribute);
-    }
-    function animate(angle) {
-        var now = Date.now();
-        var temp = now - last;
-        last = now;
-        var newAngle = angle + (30 * temp) / 1000.0;
-        return newAngle %= 360;
-    }
-    function initWebglParam() {
-        gl.enable(gl.DEPTH_TEST);
-        gl.useProgram(program);
-    }
-    function initFrameBuffer() {
-        var frameBuffer, texture, depthBuffer;
-        var err = function () {
-            if (frameBuffer)
-                gl.deleteFramebuffer(frameBuffer);
-            if (texture)
-                gl.deleteTexture(texture);
-            if (depthBuffer)
-                gl.deleteRenderbuffer(depthBuffer);
-            return null;
-        };
-        frameBuffer = gl.createFramebuffer();
-        texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, texture);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1024, 1024, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINES);
-        frameBuffer.texture = texture;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, frameBuffer);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
-        depthBuffer = gl.createRenderbuffer();
-        gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, 1024, 1024);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
-        var e = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-        if (e !== gl.FRAMEBUFFER_COMPLETE) {
-            alert("frame err");
-            return err();
-        }
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-        gl.bindRenderbuffer(gl.RENDERBUFFER, null);
-        return frameBuffer;
-    }
-    function initTexture() {
-        var texture = gl.createTexture();
-        var u_Sampler = gl.getUniformLocation(program, "u_Sampler");
-        if (!u_Sampler)
-            alert("sampler err");
-        var img = new Image();
-        img.onload = function () {
-            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
-            gl.bindTexture(gl.TEXTURE_2D, texture);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINES);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-            gl.uniform1i(u_Sampler, 0);
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        };
-        img.src = "12.jpg";
-        return texture;
-    }
-    function initObjectVertex(Object) {
+    function initCubeParam() {
         var obj = {
-            vertexBuffer: initArrayBuffer(Object.vertices, 3, gl.FLOAT),
-            texCoordBuffer: initArrayBuffer(Object.texCoords, 2, gl.FLOAT),
-            indexBuffer: initElementArrayBuffer(Object.indices, gl.UNSIGNED_BYTE),
-            numIndices: Object.indices.length
+            vertexBuffer: director.initArrayBuffer({
+                data: Amy.CubeData.vertices,
+                type: gl.FLOAT,
+                size: 3
+            }),
+            texCoordBuffer: director.initArrayBuffer({
+                data: Amy.CubeData.texCoords,
+                type: gl.FLOAT,
+                size: 2
+            }),
+            indicesBuffer: director.initElementArrayBuffer({
+                data: Amy.CubeData.indices,
+                type: gl.UNSIGNED_BYTE
+            }),
+            numIndices: Amy.CubeData.indices.length
         };
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
         return obj;
     }
-    function initArrayBuffer(arr, num, type) {
-        var buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-        buffer.pointNumber = num;
-        buffer.pointType = type;
-        return buffer;
-    }
-    function initElementArrayBuffer(arr, type) {
-        var buffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-        buffer.pointType = type;
-        return buffer;
+    function initPlaneParam() {
+        var obj = {
+            vertexBuffer: director.initArrayBuffer({
+                data: Amy.PlaneData.vertices,
+                type: gl.FLOAT,
+                size: 3
+            }),
+            texCoordBuffer: director.initArrayBuffer({
+                data: Amy.PlaneData.texCoords,
+                type: gl.FLOAT,
+                size: 2
+            }),
+            indicesBuffer: director.initElementArrayBuffer({
+                data: Amy.PlaneData.indices,
+                type: gl.UNSIGNED_BYTE
+            }),
+            numIndices: Amy.PlaneData.indices.length
+        };
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+        return obj;
     }
 })(Amy || (Amy = {}));
 //# sourceMappingURL=hiWebGl.js.map

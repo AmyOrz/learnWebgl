@@ -1,14 +1,12 @@
 namespace Amy {
     type arrayBuffer = {
-        attribute:string;
         size:number;
         type:number;
-        data:Float32Array|Int16Array|Int8Array;
+        data:any;
     }
     type elementArrayBuffer = {
-        attribute:string;
         type:number;
-        data:Float32Array|Int16Array|Int8Array;
+        data:any;
     }
     type textureBuffer = {
         sampler:WebGLUniformLocation;
@@ -17,7 +15,7 @@ namespace Amy {
     }
     export class Director {
         private _gl: any;
-
+        private attr:any = {};
         public getWebglContext(_canvas:any):WebGLRenderingContext {
             this._getWebgl(_canvas);
             this._gl.viewportWidth = _canvas.width;
@@ -70,7 +68,7 @@ namespace Amy {
             let img:HTMLImageElement = new Image();
             img.onload = ()=>{
                 this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL,1);
-                this._gl.activeTexture(this._gl.Texture0);
+                this._gl.activeTexture(this._gl.TEXTURE0);
                 this._gl.bindTexture(this._gl.TEXTURE_2D,texBuffer);
                 this._gl.texParameteri(this._gl.TEXTURE_2D,this._gl.TEXTURE_MIN_FILTER,this._gl.LINEAR);
                 this._gl.texImage2D(this._gl.TEXTURE_2D,0,this._gl.RGBA,this._gl.RGBA,this._gl.UNSIGNED_BYTE,img);
@@ -81,7 +79,7 @@ namespace Amy {
 
             return texBuffer;
         }
-        public initFrameBuffer(){
+        public initFrameBuffer(offsetWidth:number,offsetHeight:number):WebGLFramebuffer{
             let frameBuffer:WebGLFramebuffer = this._gl.createFramebuffer();
             let texture:WebGLTexture = this._gl.createTexture();
             let depth:WebGLRenderbuffer = this._gl.createRenderbuffer();
@@ -91,13 +89,41 @@ namespace Amy {
                 return;
             }
             this._gl.bindTexture(this._gl.TEXTURE_2D, texture);
-            this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, this._gl.viewportWidth,this._gl.viewportHeight, 0, this._gl.RGBA, this._gl.UNSIGNED_BYTE, null);
+            this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGBA, offsetWidth,offsetHeight, 0, this._gl.RGBA, this._gl.UNSIGNED_BYTE, null);
             this._gl.texParameteri(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.LINEAR);
             frameBuffer.texture = texture;
 
             this._gl.bindFramebuffer(this._gl.FRAMEBUFFER,frameBuffer);
-            this._gl.framebufferTexture2D(this._gl.FRAMEBUFFER,this._gl.COLOR_ATTACHMENT0,this._gl.)
+            this._gl.framebufferTexture2D(this._gl.FRAMEBUFFER,this._gl.COLOR_ATTACHMENT0,this._gl.TEXTURE_2D,texture,0);
+            this._gl.bindRenderbuffer(this._gl.RENDERBUFFER,depth);
+            this._gl.renderbufferStorage(this._gl.RENDERBUFFER,this._gl.DEPTH_COMPONENT16,offsetWidth,offsetHeight);
+            this._gl.framebufferRenderbuffer(this._gl.FRAMEBUFFER,this._gl.DEPTH_ATTACHMENT,this._gl.RENDERBUFFER,depth);
+            let e:any = this._gl.checkFramebufferStatus(this._gl.FRAMEBUFFER);
 
+            if (this._gl.FRAMEBUFFER_COMPLETE !== e) {
+                console.log('Frame buffer object is incomplete: ' + e.toString());
+                return;
+            }
+
+            // Unbind the buffer object
+            this._gl.bindFramebuffer(this._gl.FRAMEBUFFER, null);
+            this._gl.bindTexture(this._gl.TEXTURE_2D, null);
+            this._gl.bindRenderbuffer(this._gl.RENDERBUFFER, null);
+
+            return frameBuffer;
+        }
+        public getAttr():any{
+            return this.attr;
+        }
+        public setAttributeInPogram(program:WebGLProgram,attributes:string[]){
+            for(let i = 0,len = attributes.length;i<len;i++){
+                this.attr[attributes[i]] = this._gl.getAttribLocation(program,attributes[i]);
+            }
+        }
+        public setUniformInPogram(program:WebGLProgram,uniforms:string[]){
+            for(let i = 0,len = uniforms.length;i<len;i++){
+                this.attr[uniforms[i]] = this._gl.getAttribLocation(program,uniforms[i]);
+            }
         }
         private _setColor(R: number, G: number, B: number, A: number): void {
             this._gl.clearColor(R, G, B, A);

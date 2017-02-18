@@ -11,9 +11,10 @@
     "until/Vector3.ts",
     "until/Vector4.ts",
     "until/Matrix4.ts",
+    "until/Program.ts",
     "until/Director.ts",
     "until/CubeData.ts",
     "until/PlaneData.ts",
-    "useFile/fbo.ts"
+    "useFile/frameBuffer.ts"
   ]
 }
