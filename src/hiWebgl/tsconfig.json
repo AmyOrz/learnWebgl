@@ -8,13 +8,16 @@
     "sourceMap": true
   },
   "files": [
+    "until/singleton.ts",
     "until/Vector3.ts",
     "until/Vector4.ts",
     "until/Matrix4.ts",
-    "until/Program.ts",
     "until/Director.ts",
     "until/CubeData.ts",
+    "until/TriangleData.ts",
     "until/PlaneData.ts",
-    "useFile/frameBuffer.ts"
+    "until/Attr.ts",
+    "until/Greeter.ts",
+    "useFile/shadow.ts"
   ]
 }

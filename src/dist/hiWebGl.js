@@ -1,5 +1,15 @@
 var Amy;
 (function (Amy) {
+    function enumerable(value) {
+        if (value === void 0) { value = false; }
+        return function (target, propertyKey, descriptor) {
+            descriptor.enumerable = value;
+        };
+    }
+    Amy.enumerable = enumerable;
+})(Amy || (Amy = {}));
+var Amy;
+(function (Amy) {
     var Vector3 = (function () {
         function Vector3(opt_src) {
             var v = new Float32Array(3);
@@ -589,28 +599,11 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
-    var Program = (function () {
-        function Program() {
-            this.a_Position = null;
-            this.a_TexCoord = null;
-            this.a_Color = null;
-            this.u_MvpMatrix = null;
-            this.u_ModelMatrix = null;
-        }
-        return Program;
-    }());
-    Amy.Program = Program;
-})(Amy || (Amy = {}));
-var Amy;
-(function (Amy) {
     var Director = (function () {
         function Director() {
-            this.attr = {};
         }
         Director.prototype.getWebglContext = function (_canvas) {
             this._getWebgl(_canvas);
-            this._gl.viewportWidth = _canvas.width;
-            this._gl.viewportHeight = _canvas.height;
             return this._gl;
         };
         Director.prototype.initShader = function (vs, fs) {
@@ -632,6 +625,8 @@ var Amy;
                 this._gl.deleteShader(vshader);
                 return;
             }
+            if (!program)
+                console.log("program error");
             return program;
         };
         Director.prototype.initArrayBuffer = function (param) {
@@ -697,22 +692,6 @@ var Amy;
             this._gl.bindTexture(this._gl.TEXTURE_2D, null);
             this._gl.bindRenderbuffer(this._gl.RENDERBUFFER, null);
             return frameBuffer;
-        };
-        Director.prototype.getAttr = function () {
-            return this.attr;
-        };
-        Director.prototype.setAttributeInPogram = function (program, attributes) {
-            for (var i = 0, len = attributes.length; i < len; i++) {
-                this.attr[attributes[i]] = this._gl.getAttribLocation(program, attributes[i]);
-            }
-        };
-        Director.prototype.setUniformInPogram = function (program, uniforms) {
-            for (var i = 0, len = uniforms.length; i < len; i++) {
-                this.attr[uniforms[i]] = this._gl.getAttribLocation(program, uniforms[i]);
-            }
-        };
-        Director.prototype._setColor = function (R, G, B, A) {
-            this._gl.clearColor(R, G, B, A);
         };
         Director.prototype._getWebgl = function (_canvas) {
             var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
@@ -800,6 +779,22 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
+    var TriangleData = (function () {
+        function TriangleData() {
+        }
+        TriangleData.vertices = new Float32Array([
+            -0.8, 3.5, 0.0, 0.8, 3.5, 0.0, 0.0, 3.5, 1.8
+        ]);
+        TriangleData.indices = new Uint8Array([0, 1, 2]);
+        TriangleData.color = new Float32Array([
+            1.0, 0.5, 0.0, 1.0, 0.5, 0.0, 1.0, 0.0, 0.0
+        ]);
+        return TriangleData;
+    }());
+    Amy.TriangleData = TriangleData;
+})(Amy || (Amy = {}));
+var Amy;
+(function (Amy) {
     var PlaneData = (function () {
         function PlaneData() {
         }
@@ -807,6 +802,9 @@ var Amy;
             1.0, 1.0, 0.0, -1.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0
         ]);
         PlaneData.texCoords = new Float32Array([1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0]);
+        PlaneData.color = new Float32Array([
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0
+        ]);
         PlaneData.indices = new Uint8Array([0, 1, 2, 0, 2, 3]);
         return PlaneData;
     }());
@@ -814,87 +812,201 @@ var Amy;
 })(Amy || (Amy = {}));
 var Amy;
 (function (Amy) {
-    var vs = "attribute vec4 a_Position;" +
-        "attribute vec2 a_TexCoord;" +
-        "uniform mat4 u_MvpMatrix;" +
-        "varying vec2 v_TexCoord;" +
+    var Attr = (function () {
+        function Attr(gl, program, attrs, uniforms) {
+            this.gl = gl;
+            this.program = program;
+            this.attrs = attrs;
+            this.uniforms = uniforms;
+            this._program = {};
+            var attrLen = this.attrs.length;
+            var uniformLen = this.uniforms.length;
+            for (var i = 0; i < attrLen; i++) {
+                this.put(this.attrs[i], this.gl.getAttribLocation(this.program, this.attrs[i]));
+            }
+            for (var i = 0; i < uniformLen; i++) {
+                this.put(this.uniforms[i], this.gl.getUniformLocation(this.program, this.uniforms[i]));
+            }
+        }
+        Attr.prototype.put = function (name, attr) {
+            if (attr == void 0) {
+                console.log("the argument 2 is error");
+                return;
+            }
+            var oldAttr = this._program[name];
+            if (oldAttr)
+                return;
+            this._program[name] = attr;
+        };
+        Attr.prototype.getAttr = function (name) {
+            var oldAttr = this._program[name];
+            if (!oldAttr)
+                return null;
+            return oldAttr;
+        };
+        Attr.prototype.getUniform = function (name) {
+            var oldAttr = this._program[name];
+            if (!oldAttr)
+                return null;
+            return oldAttr;
+        };
+        return Attr;
+    }());
+    Amy.Attr = Attr;
+})(Amy || (Amy = {}));
+var Amy;
+(function (Amy) {
+    var Greeter = (function () {
+        function Greeter(message) {
+            this.greeting = message;
+        }
+        return Greeter;
+    }());
+    Amy.Greeter = Greeter;
+    var a = new Greeter("fckthis");
+})(Amy || (Amy = {}));
+var Amy;
+(function (Amy) {
+    var shadowVs = "attribute vec4 aPosition;" +
+        "uniform mat4 uMvpMatrix;" +
         "void main(){" +
-        "gl_Position = u_MvpMatrix * a_Position;" +
-        "v_TexCoord = a_TexCoord;" +
+        "gl_Position = uMvpMatrix * aPosition;" +
+        "}";
+    var shadowFs = '#ifdef GL_ES\n' +
+        'precision mediump float;\n' +
+        '#endif\n' +
+        'void main() {\n' +
+        '  gl_FragColor = vec4(gl_FragCoord.z, 0.0, 0.0, 0.0);\n' +
+        '}\n';
+    var vs = "attribute vec4 aPosition;" +
+        "attribute vec4 aColor;" +
+        "uniform mat4 uMvpMatrix;" +
+        "uniform mat4 uMvpMatrixFromLight;" +
+        "varying vec4 vPositionFromLight;" +
+        "varying vec4 vColor;" +
+        "void main(){" +
+        "gl_Position = uMvpMatrix * aPosition;" +
+        "vPositionFromLight = uMvpMatrixFromLight * aPosition;" +
+        "vColor = aColor;" +
         "}";
     var fs = '#ifdef GL_ES\n' +
         'precision mediump float;\n' +
         '#endif\n' +
-        'uniform sampler2D sampler;' +
-        'varying vec2 v_TexCoord;' +
+        'uniform sampler2D uShadowMap;' +
+        'varying vec4 vPositionFromLight;' +
+        'varying vec4 vColor;' +
         'void main(){' +
-        'gl_FragColor = texture2D(sampler,v_TexCoord);' +
+        'vec3 shadowCoord = (vPositionFromLight.xyz/vPositionFromLight.w)/2.0+0.5;' +
+        'vec4 rgbDepth = texture2D(uShadowMap,shadowCoord.xy);' +
+        'float depth = rgbDepth.r;' +
+        'float visibility = (shadowCoord.z>depth+0.005)?0.7:1.0;' +
+        'gl_FragColor = vec4(vColor.rgb * visibility,vColor.a);' +
         '}';
+    var OFFSCREEN_WIDTH = 2048, OFFSCREEN_HEIGHT = 2048;
+    var LIGHT_X = 0, LIGHT_Y = 11, LIGHT_Z = 2;
+    var last = Date.now();
+    var Angle = 40;
     var canvas = document.getElementById("webgl");
     var director = new Amy.Director();
     var gl = director.getWebglContext(canvas);
-    var program = director.initShader(vs, fs);
-    if (!program)
-        console.log("program is error");
-    gl.useProgram(program);
-    var attr = getAttrAndUniform();
-    var cube = initCubeParam();
-    var plane = initPlaneParam();
-    if (!cube || !plane)
-        console.log("cube or plane error");
-    var texture = director.initTextureBuffer({
-        sampler: gl.getUniformLocation(program, "sampler"),
-        src: "12.jpg"
-    });
-    if (!texture)
-        console.log("texture is error");
-    var fbo = director.initFrameBuffer(2048, 2048);
-    if (!fbo)
-        console.log("fbo is error");
-    function getAttrAndUniform() {
-        director.setAttributeInPogram(program, ["a_Position", "a_TexCoord"]);
-        director.setUniformInPogram(program, ["u_MvpMatrix"]);
-        return director.getAttr();
+    var shadowProgram = director.initShader(shadowVs, shadowFs);
+    var shadowAttr = new Amy.Attr(gl, shadowProgram, ["aPosition"], ["uMvpMatrix"]);
+    var normalProgram = director.initShader(vs, fs);
+    var normalAttr = new Amy.Attr(gl, normalProgram, ["aPosition", "aColor"], ["uMvpMatrix", "uMvpMatrixFromLight", "uShadowMap"]);
+    var triangle = initPixelVertex(Amy.TriangleData);
+    var plane = initPixelVertex(Amy.PlaneData);
+    var fbo = director.initFrameBuffer(OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, fbo.texture);
+    basicSetting();
+    var vpMatrix = new Amy.Matrix4();
+    var vpMatrixFromLight = new Amy.Matrix4();
+    setVpMatrix();
+    var currentAngle = 0.0;
+    var mvpMatrixTriangle = new Amy.Matrix4();
+    var mvpMatrixPlane = new Amy.Matrix4();
+    var modelMatrix = new Amy.Matrix4();
+    var mvpMatrix = new Amy.Matrix4();
+    var tick = function () {
+        currentAngle = animate(currentAngle);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.viewport(0, 0, OFFSCREEN_WIDTH, OFFSCREEN_HEIGHT);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.useProgram(shadowProgram);
+        drawTriangle(currentAngle, shadowAttr, triangle, vpMatrixFromLight);
+        mvpMatrixTriangle.set(mvpMatrix);
+        drawPlane(shadowAttr, plane, vpMatrixFromLight);
+        mvpMatrixPlane.set(mvpMatrix);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.useProgram(normalProgram);
+        gl.uniform1i(normalAttr.getUniform("uShadowMap"), 0);
+        gl.uniformMatrix4fv(normalAttr.getUniform("uMvpMatrixFromLight"), false, mvpMatrixTriangle.elements);
+        drawTriangle(currentAngle, normalAttr, triangle, vpMatrix);
+        gl.uniformMatrix4fv(normalAttr.getUniform("uMvpMatrixFromLight"), false, mvpMatrixPlane.elements);
+        drawPlane(normalAttr, plane, vpMatrix);
+        requestAnimationFrame(tick);
+    };
+    tick();
+    function drawTriangle(angle, attr, triangle, VpMatrix) {
+        modelMatrix.setRotate(angle, 0, 1, 0);
+        draw(attr, triangle, VpMatrix);
     }
-    function initCubeParam() {
+    function drawPlane(attr, plane, VpMatrix) {
+        modelMatrix.setRotate(90, 1, 0, 0);
+        modelMatrix.scale(3, 3, 3);
+        draw(attr, plane, VpMatrix);
+    }
+    function draw(attr, shape, VpMatrix) {
+        initAttributeVariable(attr.getAttr("aPosition"), shape.vertexBuffer);
+        if (attr.getAttr("aColor") != void 0)
+            initAttributeVariable(attr.getAttr("aColor"), shape.colorBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, shape.indicesBuffer);
+        mvpMatrix.set(VpMatrix);
+        mvpMatrix.multiply(modelMatrix);
+        gl.uniformMatrix4fv(attr.getUniform("uMvpMatrix"), false, mvpMatrix.elements);
+        gl.drawElements(gl.TRIANGLES, shape.numIndices, gl.UNSIGNED_BYTE, 0);
+    }
+    function initAttributeVariable(attribute, buffer) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.vertexAttribPointer(attribute, buffer.pointNumber, buffer.pointType, false, 0, 0);
+        gl.enableVertexAttribArray(attribute);
+    }
+    function animate(angle) {
+        var now = Date.now();
+        var elapse = now - last;
+        last = now;
+        var newAngle = angle + (Angle * elapse) / 1000.0;
+        return newAngle %= 360.0;
+    }
+    function setVpMatrix() {
+        vpMatrix.setPerspective(45, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
+        vpMatrix.lookAt(0.0, 7.0, 9.0, 0, 0, 0, 0, 1, 0);
+        vpMatrixFromLight.setPerspective(70.0, OFFSCREEN_WIDTH / OFFSCREEN_HEIGHT, 1, 100);
+        vpMatrixFromLight.lookAt(LIGHT_X, LIGHT_Y, LIGHT_Z, 0, 0, 0, 0, 1, 0);
+    }
+    function basicSetting() {
+        gl.clearColor(0, 0, 0, 1);
+        gl.enable(gl.DEPTH_TEST);
+    }
+    function initPixelVertex(data) {
         var obj = {
             vertexBuffer: director.initArrayBuffer({
-                data: Amy.CubeData.vertices,
-                type: gl.FLOAT,
-                size: 3
+                size: 3,
+                data: data.vertices,
+                type: gl.FLOAT
             }),
-            texCoordBuffer: director.initArrayBuffer({
-                data: Amy.CubeData.texCoords,
-                type: gl.FLOAT,
-                size: 2
-            }),
-            indicesBuffer: director.initElementArrayBuffer({
-                data: Amy.CubeData.indices,
-                type: gl.UNSIGNED_BYTE
-            }),
-            numIndices: Amy.CubeData.indices.length
-        };
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-        return obj;
-    }
-    function initPlaneParam() {
-        var obj = {
-            vertexBuffer: director.initArrayBuffer({
-                data: Amy.PlaneData.vertices,
-                type: gl.FLOAT,
-                size: 3
-            }),
-            texCoordBuffer: director.initArrayBuffer({
-                data: Amy.PlaneData.texCoords,
-                type: gl.FLOAT,
-                size: 2
+            colorBuffer: director.initArrayBuffer({
+                size: 3,
+                data: data.color,
+                type: gl.FLOAT
             }),
             indicesBuffer: director.initElementArrayBuffer({
-                data: Amy.PlaneData.indices,
+                data: data.indices,
                 type: gl.UNSIGNED_BYTE
             }),
-            numIndices: Amy.PlaneData.indices.length
+            numIndices: data.indices.length
         };
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);

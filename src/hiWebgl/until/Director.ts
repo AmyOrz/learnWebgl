@@ -11,15 +11,11 @@ namespace Amy {
     type textureBuffer = {
         sampler:WebGLUniformLocation;
         src:string;
-
     }
     export class Director {
-        private _gl: any;
-        private attr:any = {};
+        protected _gl: WebGLRenderingContext;
         public getWebglContext(_canvas:any):WebGLRenderingContext {
             this._getWebgl(_canvas);
-            this._gl.viewportWidth = _canvas.width;
-            this._gl.viewportHeight = _canvas.height;
             return this._gl;
         }
 
@@ -43,6 +39,7 @@ namespace Amy {
                 this._gl.deleteShader(vshader);
                 return;
             }
+            if(!program)console.log("program error");
             return program;
         }
         public initArrayBuffer(param:arrayBuffer):WebGLBuffer{
@@ -112,23 +109,6 @@ namespace Amy {
 
             return frameBuffer;
         }
-        public getAttr():any{
-            return this.attr;
-        }
-        public setAttributeInPogram(program:WebGLProgram,attributes:string[]){
-            for(let i = 0,len = attributes.length;i<len;i++){
-                this.attr[attributes[i]] = this._gl.getAttribLocation(program,attributes[i]);
-            }
-        }
-        public setUniformInPogram(program:WebGLProgram,uniforms:string[]){
-            for(let i = 0,len = uniforms.length;i<len;i++){
-                this.attr[uniforms[i]] = this._gl.getAttribLocation(program,uniforms[i]);
-            }
-        }
-        private _setColor(R: number, G: number, B: number, A: number): void {
-            this._gl.clearColor(R, G, B, A);
-        }
-
         private _getWebgl(_canvas:any): any {
             let names: string[] = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
             for (let item of names) {
