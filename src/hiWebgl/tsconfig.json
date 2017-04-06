@@ -18,6 +18,6 @@
     "until/PlaneData.ts",
     "until/Attr.ts",
     "until/Greeter.ts",
-    "useFile/shadow.ts"
+    "useFile/cube.ts"
   ]
 }
