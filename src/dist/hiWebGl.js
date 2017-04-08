@@ -869,48 +869,107 @@ var Director = Amy.Director;
 var CubeData = Amy.CubeData;
 var Matrix4 = Amy.Matrix4;
 var vs = "attribute vec4 a_Position;" +
-    "attribute vec4 a_Color;" +
+    "attribute vec2 a_TexCoord;" +
     "uniform mat4 u_MvpMatrix;" +
-    "varying vec4 v_Color;" +
+    "varying vec2 v_TexCoord;" +
     "void main(){" +
     "   gl_Position = u_MvpMatrix * a_Position;" +
-    "   v_Color = a_Color;" +
+    "   v_TexCoord = a_TexCoord;" +
     "}";
 var fs = "precision mediump float;" +
-    "varying vec4 v_Color;" +
+    "uniform sampler2D u_Sampler;" +
+    "varying vec2 v_TexCoord;" +
     "void main(){" +
-    "   gl_FragColor = v_Color;" +
+    "   gl_FragColor =texture2D(u_Sampler,v_TexCoord);" +
     "}";
 var canvas = document.getElementById("webgl");
 var director = new Director();
 var gl = director.getWebglContext(canvas);
 var program = director.initShader(vs, fs);
 if (!program)
-    console.log("program is error");
+    console.log("program is err");
 gl.useProgram(program);
 var n = initVertices();
 gl.clearColor(0, 0, 0, 1);
-var mvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
-var mvp = new Matrix4();
-mvp.setPerspective(30, 1, 1, 100);
-mvp.lookAt(3, 3, 7, 0, 0, 0, 0, 1, 0);
-mvp.rotate(50, 0, 1, 0);
-gl.uniformMatrix4fv(mvpMatrix, false, mvp.elements);
-gl.clear(gl.COLOR_BUFFER_BIT);
-gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+gl.enable(gl.DEPTH_TEST);
+var uMvpMatrix = gl.getUniformLocation(program, "u_MvpMatrix");
+var mvpMatrix = new Matrix4();
+mvpMatrix.setPerspective(45, canvas.offsetWidth / canvas.offsetHeight, 1, 100);
+mvpMatrix.lookAt(3, 3, 4, 0, 0, 0, 0, 1, 0);
+var currentAngle = [0.0, 0.0];
+initEventHandler();
+initTexture();
+var tick = function () {
+    draw();
+    requestAnimationFrame(tick);
+};
+tick();
+function draw() {
+    mvpMatrix.rotate(currentAngle[0], 1, 0, 0);
+    mvpMatrix.rotate(currentAngle[1], 0, 1, 0);
+    gl.uniformMatrix4fv(uMvpMatrix, false, mvpMatrix.elements);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+}
+function initTexture() {
+    var img = new Image();
+    img.onload = function () {
+        var texture = gl.createTexture();
+        var uSampler = gl.getUniformLocation(program, "u_Sampler");
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+        gl.uniform1i(uSampler, 0);
+    };
+    img.src = "12.jpg";
+}
+function initEventHandler() {
+    var dragging = false;
+    var lastX = -1, lastY = -1;
+    canvas.onmousedown = function (ev) {
+        var x = ev.clientX, y = ev.clientY;
+        var rect = ev.target.getBoundingClientRect();
+        if (_theMouseInCanvas(rect, x, y)) {
+            dragging = true;
+            lastX = x;
+            lastY = y;
+        }
+    };
+    canvas.onmouseup = function () {
+        dragging = false;
+        currentAngle = [0.0, 0.0];
+    };
+    canvas.onmousemove = function (ev) {
+        var x = ev.clientX, y = ev.clientY;
+        if (dragging) {
+            var factor = 100 / canvas.offsetHeight;
+            var dx = factor * (x - lastX);
+            var dy = factor * (y - lastY);
+            currentAngle[0] = Math.max(Math.min(currentAngle[0] + dy, 90), -90);
+            currentAngle[1] = currentAngle[1] + dx;
+        }
+        lastX = x;
+        lastY = y;
+    };
+}
+function _theMouseInCanvas(rect, x, y) {
+    return rect.left < x && x < rect.right && rect.top < y && y < rect.bottom;
+}
 function initVertices() {
     var position = gl.getAttribLocation(program, "a_Position");
-    var color = gl.getAttribLocation(program, "a_Color");
-    if (!initBuffer(position, 3, gl.FLOAT, CubeData.vertices))
-        return;
-    if (!initBuffer(color, 3, gl.FLOAT, CubeData.color))
-        return;
+    var texCoord = gl.getAttribLocation(program, "a_TexCoord");
+    if (!_initBuffer(position, 3, gl.FLOAT, CubeData.vertices))
+        return -1;
+    if (!_initBuffer(texCoord, 2, gl.FLOAT, CubeData.texCoords))
+        return -1;
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, CubeData.indices, gl.STATIC_DRAW);
     return CubeData.indices.length;
 }
-function initBuffer(attribute, size, type, data) {
+function _initBuffer(attribute, size, type, data) {
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
